@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreeTube — Free Movies & TV Everywhere</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080810;--surface:#10101c;--surface2:#181826;--surface3:#20202e;
+  --border:rgba(255,255,255,0.07);--gold:#e8b84b;--gold-dim:rgba(232,184,75,0.12);
+  --gold-glow:rgba(232,184,75,0.35);--text:#f0ede8;--text-muted:#7a7a90;--text-dim:#3a3a50;
+  --c-yt:#ff2b2b;--c-archive:#5b9cf6;--c-tubi:#fa500f;--c-pluto:#9b59f5;
+  --c-freevee:#00bcd4;--c-crackle:#e8b84b;--c-roku:#6c2bd9;--c-plex:#e5a00d;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.75rem;background:rgba(8,8,16,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:.08em;color:var(--gold);text-shadow:0 0 20px var(--gold-glow);flex-shrink:0;cursor:pointer;}
+.logo span{color:var(--text);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:.6rem;}
+.search-wrap{position:relative;display:flex;align-items:center;}
+.search-wrap input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.48rem 1rem .48rem 2.3rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.86rem;width:230px;outline:none;transition:border-color .2s,width .3s;}
+.search-wrap input:focus{border-color:var(--gold);width:290px;}
+.si{position:absolute;left:.7rem;color:var(--text-muted);font-size:.8rem;pointer-events:none;}
+.btn-sm{background:transparent;border:1px solid rgba(232,184,75,.3);color:var(--gold);padding:.38rem .85rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s;}
+.btn-sm:hover{background:var(--gold-dim);}
+
+/* SOURCE TABS */
+.src-bar{display:flex;gap:.45rem;padding:.8rem 1.75rem;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);background:var(--surface);}
+.src-bar::-webkit-scrollbar{display:none;}
+.stab{display:flex;align-items:center;gap:.4rem;padding:.38rem .95rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.stab .pip{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.stab:hover{color:var(--text);background:var(--surface2);}
+.stab.on[data-s="all"]{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+.stab.on[data-s="archive"]{background:rgba(91,156,246,.12);border-color:var(--c-archive);color:var(--c-archive);}
+.stab.on[data-s="youtube"]{background:rgba(255,43,43,.12);border-color:var(--c-yt);color:var(--c-yt);}
+.stab.on[data-s="tubi"]{background:rgba(250,80,15,.12);border-color:var(--c-tubi);color:var(--c-tubi);}
+.stab.on[data-s="pluto"]{background:rgba(155,89,245,.12);border-color:var(--c-pluto);color:var(--c-pluto);}
+.stab.on[data-s="freevee"]{background:rgba(0,188,212,.12);border-color:var(--c-freevee);color:var(--c-freevee);}
+.stab.on[data-s="crackle"]{background:rgba(232,184,75,.12);border-color:var(--c-crackle);color:var(--c-crackle);}
+.stab.on[data-s="roku"]{background:rgba(108,43,217,.12);border-color:var(--c-roku);color:var(--c-roku);}
+.stab.on[data-s="plex"]{background:rgba(229,160,13,.12);border-color:var(--c-plex);color:var(--c-plex);}
+
+/* STATUS BAR */
+#sbar{display:flex;gap:.75rem;padding:.55rem 1.75rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:.7rem;flex-wrap:wrap;align-items:center;}
+.apill{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .65rem;border-radius:10px;border:1px solid var(--border);font-weight:600;}
+.apill.ok{border-color:rgba(75,187,110,.3);color:#4bbb6e;background:rgba(75,187,110,.08);}
+.apill.no{color:var(--text-dim);}
+.apill .pip2{width:5px;height:5px;border-radius:50%;}
+.apill.ok .pip2{background:#4bbb6e;}
+.apill.no .pip2{background:var(--text-dim);}
+
+/* HERO */
+#hero{position:relative;height:460px;display:flex;align-items:flex-end;padding:2.25rem 1.75rem;overflow:hidden;}
+#hbg{position:absolute;inset:0;background:linear-gradient(135deg,#0c0a1e,#1a0c10,#0a141a);}
+#hbg img{width:100%;height:100%;object-fit:cover;opacity:.2;transition:opacity .6s;}
+#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,transparent 52%),linear-gradient(to right,var(--bg) 0%,transparent 42%);}
+.hcont{position:relative;z-index:2;max-width:560px;}
+.hbadge{display:inline-flex;align-items:center;gap:.35rem;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .6rem;border-radius:3px;margin-bottom:.8rem;}
+.htitle{font-family:'Bebas Neue',sans-serif;font-size:3.4rem;line-height:1;letter-spacing:.03em;margin-bottom:.75rem;text-shadow:0 2px 18px rgba(0,0,0,.8);}
+.hmeta{display:flex;gap:.6rem;align-items:center;margin-bottom:.6rem;font-size:.78rem;color:var(--text-muted);}
+.hdesc{font-size:.86rem;color:rgba(240,237,232,.6);line-height:1.65;margin-bottom:1.3rem;max-width:440px;}
+.btn-play{display:inline-flex;align-items:center;gap:.5rem;background:var(--gold);color:#080810;border:none;padding:.6rem 1.5rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:opacity .2s;}
+.btn-play:hover{opacity:.85;}
+
+/* SECTIONS */
+main{padding:0 0 5rem;}
+.sec{margin-top:2rem;padding:0 1.75rem;}
+.sech{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+.sect{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.06em;}
+.sall{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;margin-left:auto;opacity:.7;}
+.sall:hover{opacity:1;color:var(--gold);}
+
+/* ROW */
+.row{display:flex;gap:.85rem;overflow-x:auto;padding-bottom:.7rem;scrollbar-width:thin;scrollbar-color:var(--surface2) transparent;}
+.row::-webkit-scrollbar{height:3px;}
+.row::-webkit-scrollbar-thumb{background:var(--surface2);}
+
+/* CARD */
+.card{flex-shrink:0;width:185px;cursor:pointer;border-radius:8px;overflow:hidden;transition:transform .27s cubic-bezier(.34,1.56,.64,1),box-shadow .27s;background:var(--surface);position:relative;}
+.card:hover{transform:scale(1.06) translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.7),0 0 0 1px rgba(232,184,75,.12);z-index:10;}
+.cthumb{width:100%;height:112px;background:var(--surface2);position:relative;overflow:hidden;}
+.cthumb img{width:100%;height:100%;object-fit:cover;transition:transform .32s;}
+.card:hover .cthumb img{transform:scale(1.08);}
+.pover{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;}
+.card:hover .pover{opacity:1;}
+.pring{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;font-weight:700;}
+.cstripe{position:absolute;top:0;left:0;right:0;height:3px;}
+.cbody{padding:.6rem .7rem;}
+.csrc{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem;}
+.ctitle{font-family:'DM Serif Display',serif;font-size:.83rem;line-height:1.3;margin-bottom:.32rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cmeta{display:flex;gap:.35rem;font-size:.64rem;color:var(--text-muted);align-items:center;}
+.ftag{font-size:.56rem;font-weight:700;letter-spacing:.05em;padding:.1rem .32rem;border-radius:2px;text-transform:uppercase;margin-left:auto;border:1px solid currentColor;}
+
+/* SKELETONS */
+.sk{flex-shrink:0;width:185px;border-radius:8px;overflow:hidden;background:var(--surface);}
+.skt{width:100%;height:112px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:sh 1.35s infinite;}
+.skb{padding:.6rem .7rem;}
+.skl{height:8px;border-radius:3px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:sh 1.35s infinite;margin-bottom:.4rem;}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* SEARCH VIEW */
+#sv{display:none;padding:1.5rem 1.75rem 4rem;}
+#sv.on{display:block;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(182px,1fr));gap:.9rem;margin-top:1.1rem;}
+.grid .card{width:100%;}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);}
+.empty .ico{font-size:2.2rem;margin-bottom:.6rem;opacity:.4;}
+
+/* API MODAL */
+#am{position:fixed;inset:0;z-index:9000;background:rgba(4,4,12,.97);display:flex;align-items:center;justify-content:center;}
+.ami{background:var(--surface);border:1px solid rgba(232,184,75,.22);border-radius:16px;padding:2.1rem;max-width:540px;width:93%;}
+.ami h2{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:.06em;color:var(--gold);margin-bottom:.25rem;}
+.ami p{font-size:.8rem;color:var(--text-muted);line-height:1.65;margin-bottom:1.35rem;}
+.arow{display:flex;align-items:center;gap:.65rem;margin-bottom:.85rem;flex-wrap:wrap;}
+.arow label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;min-width:85px;flex-shrink:0;}
+.arow input{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.52rem .85rem;color:var(--text);font-family:monospace;font-size:.8rem;outline:none;transition:border-color .2s;}
+.arow input:focus{border-color:var(--gold);}
+.arow input::placeholder{color:var(--text-dim);}
+.tag{font-size:.62rem;padding:.18rem .48rem;border-radius:3px;font-weight:700;flex-shrink:0;}
+.tg{background:rgba(75,187,110,.12);color:#4bbb6e;border:1px solid rgba(75,187,110,.28);}
+.to{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(232,184,75,.28);}
+.ama{display:flex;gap:.65rem;margin-top:1.35rem;flex-wrap:wrap;}
+.bcn{background:var(--gold);color:#080810;border:none;padding:.6rem 1.6rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;}
+.bcn:hover{opacity:.88;}
+.bsk{background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:.6rem 1.1rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;}
+.bsk:hover{color:var(--text);}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.6rem;right:1.6rem;background:var(--surface2);border:1px solid var(--gold-dim);color:var(--text);padding:.6rem 1rem;border-radius:8px;font-size:.8rem;z-index:1000;transform:translateY(70px);opacity:0;transition:all .28s;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+footer{border-top:1px solid var(--border);padding:1.4rem 1.75rem;text-align:center;font-size:.7rem;color:var(--text-dim);line-height:1.9;}
+footer strong{color:var(--gold);}footer a{color:var(--text-muted);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="am">
+  <div class="ami">
+    <div style="font-size:1.9rem;margin-bottom:.4rem;">🎬</div>
+    <h2>FreeTube Setup</h2>
+    <p>Connect your API keys to unlock more sources. <strong style="color:var(--text)">Internet Archive loads instantly — no key needed.</strong> YouTube and TMDB are optional free keys that unlock many more services.</p>
+
+    <div class="arow">
+      <label style="color:var(--c-archive)">🏛 Archive</label>
+      <span style="font-size:.8rem;color:#4bbb6e;font-weight:600;">✅ Works immediately — no key required</span>
+      <span class="tag tg">FREE</span>
+    </div>
+    <div class="arow">
+      <label style="color:var(--c-yt)">▶ YouTube</label>
+      <input id="ky" type="text" placeholder="AIzaSy… (YouTube Data API v3)" onkeydown="if(event.key==='Enter')go()" />
+      <span class="tag to">OPTIONAL</span>
+    </div>
+    <div class="arow">
+      <label style="color:var(--c-tubi)">🎬 TMDB</label>
+      <input id="kt" type="text" placeholder="TMDB API key (v3 auth)" onkeydown="if(event.key==='Enter')go()" />
+      <span class="tag to">OPTIONAL</span>
+    </div>
+    <p style="font-size:.7rem;color:var(--text-dim);margin-top:.6rem;margin-bottom:0;">TMDB unlocks: Tubi · Pluto TV · Amazon Freevee · Crackle · Peacock · Plex · The Roku Channel<br>Free key at <strong style="color:var(--text)">themoviedb.org/settings/api</strong></p>
+    <div class="ama">
+      <button class="bcn" onclick="go()">▶ Launch FreeTube</button>
+      <button class="bsk" onclick="go(true)">Skip — Use Archive Only</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showHome()">Free<span>Tube</span></div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <span class="si">🔍</span>
+      <input type="text" id="si" placeholder="Search all sources…" />
+    </div>
+    <button class="btn-sm" onclick="document.getElementById('am').style.display='flex'">⚙ API Keys</button>
+  </div>
+</nav>
+
+<!-- SOURCE TABS -->
+<div class="src-bar" id="stabs">
+  <button class="stab on" data-s="all" onclick="setSrc('all',this)"><span class="pip" style="background:var(--gold)"></span>All Sources</button>
+  <button class="stab" data-s="archive" onclick="setSrc('archive',this)"><span class="pip" style="background:var(--c-archive)"></span>Internet Archive</button>
+  <button class="stab" data-s="youtube" id="tyt" onclick="setSrc('youtube',this)" style="display:none"><span class="pip" style="background:var(--c-yt)"></span>YouTube</button>
+  <button class="stab" data-s="tubi" id="ttubi" onclick="setSrc('tubi',this)" style="display:none"><span class="pip" style="background:var(--c-tubi)"></span>Tubi</button>
+  <button class="stab" data-s="pluto" id="tpluto" onclick="setSrc('pluto',this)" style="display:none"><span class="pip" style="background:var(--c-pluto)"></span>Pluto TV</button>
+  <button class="stab" data-s="freevee" id="tfv" onclick="setSrc('freevee',this)" style="display:none"><span class="pip" style="background:var(--c-freevee)"></span>Freevee</button>
+  <button class="stab" data-s="crackle" id="tcrk" onclick="setSrc('crackle',this)" style="display:none"><span class="pip" style="background:var(--c-crackle)"></span>Crackle</button>
+  <button class="stab" data-s="roku" id="troku" onclick="setSrc('roku',this)" style="display:none"><span class="pip" style="background:var(--c-roku)"></span>Roku Channel</button>
+  <button class="stab" data-s="plex" id="tplex" onclick="setSrc('plex',this)" style="display:none"><span class="pip" style="background:var(--c-plex)"></span>Plex</button>
+</div>
+
+<!-- STATUS BAR -->
+<div id="sbar"></div>
+
+<!-- HERO -->
+<div id="hero">
+  <div id="hbg"><img id="himg" src="" alt="" /></div>
+  <div class="hcont">
+    <div class="hbadge" id="hbadge">🎬 Free &amp; Legal</div>
+    <div class="htitle" id="htitle">DISCOVER FREE CINEMA</div>
+    <div class="hmeta"><span id="hchan"></span><span id="hyr"></span></div>
+    <p class="hdesc" id="hdesc">Thousands of free movies &amp; TV shows across multiple services — all legal, all ad-supported.</p>
+    <a id="hbtn" href="#" target="_blank" rel="noopener" class="btn-play">▶ Watch Free</a>
+  </div>
+</div>
+
+<!-- HOME -->
+<main id="hv">
+  <div class="sec">
+    <div class="sech"><div class="sect">🏛 <span style="color:var(--c-archive)">Internet Archive</span> — Public Domain Films</div><span class="sall" onclick="setSrc('archive',document.querySelector('[data-s=archive]'))">Browse →</span></div>
+    <div class="row" id="ra"></div>
+  </div>
+  <div class="sec" id="syt" style="display:none">
+    <div class="sech"><div class="sect">▶ <span style="color:var(--c-yt)">YouTube</span> — Free Movies</div><span class="sall" onclick="setSrc('youtube',document.querySelector('[data-s=youtube]'))">Browse →</span></div>
+    <div class="row" id="ryt"></div>
+  </div>
+  <div class="sec" id="stmdb" style="display:none">
+    <div class="sech"><div class="sect">🎬 <span style="color:var(--c-tubi)">Tubi · Pluto · Freevee</span> — Trending Free</div><span class="sall" onclick="setSrc('tubi',document.querySelector('[data-s=tubi]'))">Browse →</span></div>
+    <div class="row" id="rtmdb"></div>
+  </div>
+  <div class="sec">
+    <div class="sech"><div class="sect">🎞 <span style="color:var(--c-archive)">Classic Cinema</span> — 1920s–1950s</div></div>
+    <div class="row" id="rcls"></div>
+  </div>
+  <div class="sec">
+    <div class="sech"><div class="sect">🎭 <span style="color:var(--c-archive)">Documentaries</span></div></div>
+    <div class="row" id="rdoc"></div>
+  </div>
+</main>
+
+<!-- SEARCH VIEW -->
+<div id="sv">
+  <div class="sech"><div class="sect" id="slbl">Results</div></div>
+  <div class="grid" id="sgrid"></div>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+  <strong>FreeTube</strong> — All content is free, legal, and ad-supported on official services.<br>
+  Powered by <a href="https://archive.org" target="_blank">Internet Archive</a> · <a href="https://youtube.com" target="_blank">YouTube Data API</a> · <a href="https://themoviedb.org" target="_blank">TMDB</a><br>
+  FreeTube does not host or redistribute any media.
+</footer>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────
+const SMETA = {
+  all:     {label:'All Sources',       color:'var(--gold)',      bg:'var(--gold-dim)'},
+  archive: {label:'Internet Archive',  color:'var(--c-archive)', bg:'rgba(91,156,246,.12)'},
+  youtube: {label:'YouTube',           color:'var(--c-yt)',      bg:'rgba(255,43,43,.12)'},
+  tubi:    {label:'Tubi',              color:'var(--c-tubi)',    bg:'rgba(250,80,15,.12)'},
+  pluto:   {label:'Pluto TV',          color:'var(--c-pluto)',   bg:'rgba(155,89,245,.12)'},
+  freevee: {label:'Amazon Freevee',    color:'var(--c-freevee)', bg:'rgba(0,188,212,.12)'},
+  crackle: {label:'Crackle',           color:'var(--c-crackle)', bg:'rgba(232,184,75,.12)'},
+  roku:    {label:'Roku Channel',      color:'var(--c-roku)',    bg:'rgba(108,43,217,.12)'},
+  plex:    {label:'Plex',              color:'var(--c-plex)',    bg:'rgba(229,160,13,.12)'},
+};
+const FREE_P = {73:'Tubi',300:'Pluto TV',10:'Amazon Freevee',117:'Crackle',207:'Roku Channel',538:'Plex',386:'Peacock Free',212:'Hoopla'};
+const P_COLOR = {73:'var(--c-tubi)',300:'var(--c-pluto)',10:'var(--c-freevee)',117:'var(--c-crackle)',207:'var(--c-roku)',538:'var(--c-plex)',386:'var(--c-freevee)',212:'var(--c-archive)'};
+const P_LINK  = {
+  73:  t=>`https://tubitv.com/search?q=${enc(t)}`,
+  300: t=>`https://pluto.tv/search?q=${enc(t)}`,
+  10:  t=>`https://www.amazon.com/s?k=${enc(t)}&i=instant-video&rh=n%3A2858778011`,
+  117: t=>`https://www.crackle.com/search/${enc(t)}`,
+  207: t=>`https://therokuchannel.roku.com/search?q=${enc(t)}`,
+  538: t=>`https://app.plex.tv/desktop/#!/search?query=${enc(t)}`,
+  386: t=>`https://www.peacocktv.com/watch/search?q=${enc(t)}`,
+  212: t=>`https://www.hoopladigital.com/search/${enc(t)}`,
+};
+const PROV_SRC = {73:'tubi',300:'pluto',10:'freevee',117:'crackle',207:'roku',538:'plex',386:'freevee',212:'archive'};
+
+// ── STATE ────────────────────────────────────────────
+let K = {yt:'',tmdb:''};
+let curSrc = 'all';
+
+try { K.yt=localStorage.getItem('ft_yt')||''; K.tmdb=localStorage.getItem('ft_tmdb')||''; } catch(e){}
+
+// ── BOOT ─────────────────────────────────────────────
+if (K.yt || K.tmdb) {
+  document.getElementById('ky').value = K.yt;
+  document.getElementById('kt').value = K.tmdb;
+  document.getElementById('am').style.display = 'none';
+  init();
+}
+
+function go(skipOpt) {
+  if (!skipOpt) {
+    K.yt   = document.getElementById('ky').value.trim();
+    K.tmdb = document.getElementById('kt').value.trim();
+  }
+  try { localStorage.setItem('ft_yt',K.yt); localStorage.setItem('ft_tmdb',K.tmdb); } catch(e){}
+  document.getElementById('am').style.display = 'none';
+  init();
+}
+
+function init() {
+  updateStatus();
+  showTabs();
+  loadHome();
+  setupSearch();
+}
+
+function updateStatus() {
+  document.getElementById('sbar').innerHTML =
+    `<div class="apill ok"><div class="pip2"></div>🏛 Internet Archive</div>` +
+    `<div class="apill ${K.yt?'ok':'no'}"><div class="pip2"></div>▶ YouTube</div>` +
+    `<div class="apill ${K.tmdb?'ok':'no'}"><div class="pip2"></div>🎬 TMDB (Tubi · Pluto · Freevee · Crackle · Roku · Plex)</div>` +
+    `<span style="margin-left:auto;font-size:.68rem;color:var(--text-dim);font-style:italic;">All content opens on official streaming sites</span>`;
+}
+
+function showTabs() {
+  if (K.yt)   document.getElementById('tyt').style.display   = 'flex';
+  if (K.tmdb) ['ttubi','tpluto','tfv','tcrk','troku','tplex'].forEach(id => document.getElementById(id).style.display='flex');
+}
+
+// ── LOAD HOME ────────────────────────────────────────
+async function loadHome() {
+  skels('ra',8); skels('rcls',8); skels('rdoc',8);
+  if (K.yt)   { document.getElementById('syt').style.display='block';   skels('ryt',8); }
+  if (K.tmdb) { document.getElementById('stmdb').style.display='block'; skels('rtmdb',8); }
+
+  // Archive rows in parallel
+  const [main, classics, docs] = await Promise.all([
+    archSearch('feature film', 10),
+    archSearch('classic film noir western 1930 1940 1950', 8),
+    archSearch('documentary educational film', 8),
+  ]);
+
+  renderRow('ra', main, 'archive');
+  renderRow('rcls', classics, 'archive');
+  renderRow('rdoc', docs, 'archive');
+  if (main.length) setHero(main[0], 'archive');
+
+  if (K.yt) {
+    ytSearch('full movie free official', 8).then(r => renderRow('ryt', r, 'youtube'));
+  }
+  if (K.tmdb) {
+    tmdbTrending().then(r => renderRow('rtmdb', r, 'tmdb'));
+  }
+}
+
+// ── ARCHIVE API (no key) ─────────────────────────────
+async function archSearch(q, rows=10) {
+  try {
+    const p = new URLSearchParams({
+      q: `mediatype:movies AND subject:(${q}) AND -subject:spam`,
+      fl: 'identifier,title,description,year,subject',
+      rows, output:'json', sort:'downloads desc'
+    });
+    const r = await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d = await r.json();
+    return (d.response?.docs||[]).map(i=>({
+      id:i.identifier, title:i.title||i.identifier,
+      channel:'Internet Archive',
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:'archive'
+    }));
+  } catch(e){ return []; }
+}
+
+// ── YOUTUBE API ──────────────────────────────────────
+async function ytSearch(q, n=10) {
+  if (!K.yt) return [];
+  try {
+    const p = new URLSearchParams({part:'snippet',q,type:'video',videoEmbeddable:'true',maxResults:n,key:K.yt});
+    const r = await fetch(`https://www.googleapis.com/youtube/v3/search?${p}`);
+    const d = await r.json();
+    if (d.error) { toast('⚠️ YouTube: '+d.error.message.slice(0,55)); return []; }
+    return (d.items||[]).filter(i=>i.id?.videoId).map(i=>({
+      id:i.id.videoId, title:dh(i.snippet.title),
+      channel:i.snippet.channelTitle,
+      thumb:i.snippet.thumbnails?.high?.url||i.snippet.thumbnails?.default?.url||'',
+      year:(i.snippet.publishedAt||'').slice(0,4),
+      desc:dh(i.snippet.description||''),
+      url:`https://www.youtube.com/watch?v=${i.id.videoId}`,
+      src:'youtube'
+    }));
+  } catch(e){ return []; }
+}
+
+// ── TMDB API ─────────────────────────────────────────
+async function tmdbTrending() {
+  if (!K.tmdb) return [];
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${K.tmdb}`);
+    const d = await r.json();
+    if (d.status_message) { toast('⚠️ TMDB: '+d.status_message.slice(0,55)); return []; }
+    const movies = (d.results||[]).slice(0,12);
+    const res = await Promise.all(movies.map(m=>tmdbProviders(m,'movie')));
+    return res.filter(Boolean);
+  } catch(e){ return []; }
+}
+
+async function tmdbProviders(item, type) {
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/${type}/${item.id}/watch/providers?api_key=${K.tmdb}`);
+    const d = await r.json();
+    const us = d.results?.US;
+    const free = [...(us?.free||[]),...(us?.flatrate||[])].filter(p=>FREE_P[p.provider_id]);
+    if (!free.length) return null;
+    const prov = free[0]; const pid = prov.provider_id;
+    const title = item.title||item.name||'';
+    return {
+      id:String(item.id), title,
+      channel:FREE_P[pid]||'Free Streaming',
+      thumb:item.poster_path?`https://image.tmdb.org/t/p/w500${item.poster_path}`:'',
+      year:(item.release_date||item.first_air_date||'').slice(0,4),
+      desc:item.overview||'',
+      url:P_LINK[pid]?P_LINK[pid](title):'#',
+      src:'tmdb', provider:pid,
+    };
+  } catch(e){ return null; }
+}
+
+async function tmdbSearch(q, filterSrc) {
+  if (!K.tmdb) return [];
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${K.tmdb}&query=${enc(q)}&include_adult=false`);
+    const d = await r.json();
+    const items = (d.results||[]).filter(x=>x.media_type==='movie'||x.media_type==='tv').slice(0,14);
+    const res = await Promise.all(items.map(async m => {
+      const item = await tmdbProviders(m, m.media_type);
+      if (!item) return null;
+      // Filter by source tab
+      if (filterSrc === 'all' || !filterSrc) return item;
+      const provSrc = PROV_SRC[item.provider] || '';
+      return provSrc === filterSrc ? item : null;
+    }));
+    return res.filter(Boolean);
+  } catch(e){ return []; }
+}
+
+// ── RENDER ────────────────────────────────────────────
+function renderRow(id, items, hint) {
+  const el = document.getElementById(id); if (!el) return;
+  if (!items.length) { el.innerHTML = `<div class="empty" style="padding:1.5rem .5rem;text-align:left;"><div class="ico" style="font-size:1.4rem;margin-bottom:.4rem;">🎬</div><p style="font-size:.78rem;">No content available.</p></div>`; return; }
+  el.innerHTML = items.map(x=>card(x)).join('');
+}
+
+function card(x) {
+  const s = x.src||'archive';
+  const pid = x.provider;
+  const color = s==='tmdb'&&pid ? (P_COLOR[pid]||'var(--gold)') : (SMETA[s]?.color||'var(--gold)');
+  const label = s==='tmdb'&&pid ? (FREE_P[pid]||'Free') : (SMETA[s]?.label||s);
+  const url = ej(x.url||'#');
+  return `<div class="card" onclick="window.open('${url}','_blank')">
+    <div class="cstripe" style="background:${color}"></div>
+    <div class="cthumb">
+      <img src="${x.thumb}" alt="${eh(x.title)}" loading="lazy"
+        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 185 112%22><rect fill=%22%2310101c%22 width=%22185%22 height=%22112%22/><text fill=%22%23333%22 font-size=%2230%22 x=%2292%22 y=%2256%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>🎬</text></svg>'" />
+      <div class="pover"><div class="pring" style="background:${color}">▶</div></div>
+    </div>
+    <div class="cbody">
+      <div class="csrc" style="color:${color}">${eh(label)}</div>
+      <div class="ctitle">${eh(x.title)}</div>
+      <div class="cmeta"><span>${x.year||''}</span><span class="ftag" style="color:${color}">FREE</span></div>
+    </div>
+  </div>`;
+}
+
+function skels(id, n) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = Array(n).fill(0).map(()=>`<div class="sk"><div class="skt"></div><div class="skb"><div class="skl" style="width:48%;height:7px"></div><div class="skl"></div><div class="skl" style="width:33%;height:7px"></div></div></div>`).join('');
+}
+
+// ── HERO ─────────────────────────────────────────────
+function setHero(x, s) {
+  const m = SMETA[s]||SMETA.archive;
+  const badge = document.getElementById('hbadge');
+  badge.textContent = '🎬 '+m.label;
+  badge.style.cssText = `background:${m.bg};border:1px solid ${m.color};color:${m.color};`;
+  document.getElementById('htitle').textContent = x.title;
+  document.getElementById('hchan').textContent  = x.channel;
+  document.getElementById('hyr').textContent    = x.year ? ' · '+x.year : '';
+  const raw = Array.isArray(x.desc)?x.desc[0]:(x.desc||'');
+  document.getElementById('hdesc').textContent  = raw.slice(0,160)+(raw.length>160?'…':'') || 'Free & legal streaming — click to watch.';
+  document.getElementById('himg').src = x.thumb||'';
+  document.getElementById('hbtn').href = x.url||'#';
+}
+
+// ── SOURCE SWITCH ────────────────────────────────────
+function setSrc(s, el) {
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  curSrc = s;
+  const q = document.getElementById('si').value.trim();
+  if (q) doSearch(q); else showHome();
+}
+
+// ── SEARCH ────────────────────────────────────────────
+function setupSearch() {
+  const inp = document.getElementById('si');
+  let tm;
+  inp.addEventListener('input', ()=>{ clearTimeout(tm); const q=inp.value.trim(); if(!q){showHome();return;} tm=setTimeout(()=>doSearch(q),650); });
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){clearTimeout(tm);const q=inp.value.trim();if(q)doSearch(q);} });
+}
+
+async function doSearch(q) {
+  const srcName = SMETA[curSrc]?.label || curSrc;
+  document.getElementById('hv').style.display = 'none';
+  document.getElementById('sv').classList.add('on');
+  document.getElementById('slbl').textContent = `"${q}" — ${curSrc==='all'?'All Sources':srcName}`;
+  const grid = document.getElementById('sgrid');
+  grid.innerHTML = Array(8).fill(0).map(()=>`<div class="sk"><div class="skt"></div><div class="skb"><div class="skl" style="width:50%"></div><div class="skl"></div></div></div>`).join('');
+
+  let results = [];
+  const tasks = [];
+  if (curSrc==='all'||curSrc==='archive') tasks.push(archSearch(q,10).then(r=>results.push(...r)));
+  if ((curSrc==='all'||curSrc==='youtube')&&K.yt) tasks.push(ytSearch(`${q} full movie OR full episode free`,8).then(r=>results.push(...r)));
+  if ((curSrc==='all'||['tubi','pluto','freevee','crackle','roku','plex'].includes(curSrc))&&K.tmdb) tasks.push(tmdbSearch(q,curSrc==='all'?null:curSrc).then(r=>results.push(...r)));
+
+  await Promise.all(tasks);
+
+  if (!results.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ico">🎬</div><p style="font-size:.82rem">No results found${!K.tmdb&&!K.yt?' — add API keys to unlock more sources':''}.</p></div>`;
+    return;
+  }
+  grid.innerHTML = results.map(x=>card(x)).join('');
+}
+
+function showHome() {
+  document.getElementById('hv').style.display = 'block';
+  document.getElementById('sv').classList.remove('on');
+  document.getElementById('si').value = '';
+}
+
+// ── UTILS ─────────────────────────────────────────────
+const enc = s => encodeURIComponent(s);
+const dh  = s => { const t=document.createElement('textarea'); t.innerHTML=s; return t.value; };
+const eh  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ej  = s => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,'\\"');
+function toast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>

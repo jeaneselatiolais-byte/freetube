@@ -3,545 +3,469 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreeTube — Free Movies & TV Everywhere</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<title>App Pre-Launch Marketing Tracker</title>
 <style>
 :root {
-  --bg:#080810;--surface:#10101c;--surface2:#181826;--surface3:#20202e;
-  --border:rgba(255,255,255,0.07);--gold:#e8b84b;--gold-dim:rgba(232,184,75,0.12);
-  --gold-glow:rgba(232,184,75,0.35);--text:#f0ede8;--text-muted:#7a7a90;--text-dim:#3a3a50;
-  --c-yt:#ff2b2b;--c-archive:#5b9cf6;--c-tubi:#fa500f;--c-pluto:#9b59f5;
-  --c-freevee:#00bcd4;--c-crackle:#e8b84b;--c-roku:#6c2bd9;--c-plex:#e5a00d;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg-page:    #F2F0EC;
+  --bg-main:    #FFFFFF;
+  --bg-sidebar: #ECEAE5;
+  --bg-surface: #F7F6F3;
+  --bg-hover:   #EDEAE4;
+  --bg-danger:  #FEF2F2;
+  --txt-primary:   #1C1917;
+  --txt-secondary: #57534E;
+  --txt-muted:     #A8A29E;
+  --txt-danger:    #B91C1C;
+  --bdr-light:  rgba(0,0,0,0.08);
+  --bdr-mid:    rgba(0,0,0,0.14);
+  --bdr-strong: rgba(0,0,0,0.24);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --accent: #2563EB;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
 
-/* NAV */
-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.75rem;background:rgba(8,8,16,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:.08em;color:var(--gold);text-shadow:0 0 20px var(--gold-glow);flex-shrink:0;cursor:pointer;}
-.logo span{color:var(--text);}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:.6rem;}
-.search-wrap{position:relative;display:flex;align-items:center;}
-.search-wrap input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.48rem 1rem .48rem 2.3rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.86rem;width:230px;outline:none;transition:border-color .2s,width .3s;}
-.search-wrap input:focus{border-color:var(--gold);width:290px;}
-.si{position:absolute;left:.7rem;color:var(--text-muted);font-size:.8rem;pointer-events:none;}
-.btn-sm{background:transparent;border:1px solid rgba(232,184,75,.3);color:var(--gold);padding:.38rem .85rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s;}
-.btn-sm:hover{background:var(--gold-dim);}
-
-/* SOURCE TABS */
-.src-bar{display:flex;gap:.45rem;padding:.8rem 1.75rem;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);background:var(--surface);}
-.src-bar::-webkit-scrollbar{display:none;}
-.stab{display:flex;align-items:center;gap:.4rem;padding:.38rem .95rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
-.stab .pip{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.stab:hover{color:var(--text);background:var(--surface2);}
-.stab.on[data-s="all"]{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
-.stab.on[data-s="archive"]{background:rgba(91,156,246,.12);border-color:var(--c-archive);color:var(--c-archive);}
-.stab.on[data-s="youtube"]{background:rgba(255,43,43,.12);border-color:var(--c-yt);color:var(--c-yt);}
-.stab.on[data-s="tubi"]{background:rgba(250,80,15,.12);border-color:var(--c-tubi);color:var(--c-tubi);}
-.stab.on[data-s="pluto"]{background:rgba(155,89,245,.12);border-color:var(--c-pluto);color:var(--c-pluto);}
-.stab.on[data-s="freevee"]{background:rgba(0,188,212,.12);border-color:var(--c-freevee);color:var(--c-freevee);}
-.stab.on[data-s="crackle"]{background:rgba(232,184,75,.12);border-color:var(--c-crackle);color:var(--c-crackle);}
-.stab.on[data-s="roku"]{background:rgba(108,43,217,.12);border-color:var(--c-roku);color:var(--c-roku);}
-.stab.on[data-s="plex"]{background:rgba(229,160,13,.12);border-color:var(--c-plex);color:var(--c-plex);}
-
-/* STATUS BAR */
-#sbar{display:flex;gap:.75rem;padding:.55rem 1.75rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:.7rem;flex-wrap:wrap;align-items:center;}
-.apill{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .65rem;border-radius:10px;border:1px solid var(--border);font-weight:600;}
-.apill.ok{border-color:rgba(75,187,110,.3);color:#4bbb6e;background:rgba(75,187,110,.08);}
-.apill.no{color:var(--text-dim);}
-.apill .pip2{width:5px;height:5px;border-radius:50%;}
-.apill.ok .pip2{background:#4bbb6e;}
-.apill.no .pip2{background:var(--text-dim);}
-
-/* HERO */
-#hero{position:relative;height:460px;display:flex;align-items:flex-end;padding:2.25rem 1.75rem;overflow:hidden;}
-#hbg{position:absolute;inset:0;background:linear-gradient(135deg,#0c0a1e,#1a0c10,#0a141a);}
-#hbg img{width:100%;height:100%;object-fit:cover;opacity:.2;transition:opacity .6s;}
-#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,transparent 52%),linear-gradient(to right,var(--bg) 0%,transparent 42%);}
-.hcont{position:relative;z-index:2;max-width:560px;}
-.hbadge{display:inline-flex;align-items:center;gap:.35rem;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .6rem;border-radius:3px;margin-bottom:.8rem;}
-.htitle{font-family:'Bebas Neue',sans-serif;font-size:3.4rem;line-height:1;letter-spacing:.03em;margin-bottom:.75rem;text-shadow:0 2px 18px rgba(0,0,0,.8);}
-.hmeta{display:flex;gap:.6rem;align-items:center;margin-bottom:.6rem;font-size:.78rem;color:var(--text-muted);}
-.hdesc{font-size:.86rem;color:rgba(240,237,232,.6);line-height:1.65;margin-bottom:1.3rem;max-width:440px;}
-.btn-play{display:inline-flex;align-items:center;gap:.5rem;background:var(--gold);color:#080810;border:none;padding:.6rem 1.5rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:opacity .2s;}
-.btn-play:hover{opacity:.85;}
-
-/* SECTIONS */
-main{padding:0 0 5rem;}
-.sec{margin-top:2rem;padding:0 1.75rem;}
-.sech{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
-.sect{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.06em;}
-.sall{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;margin-left:auto;opacity:.7;}
-.sall:hover{opacity:1;color:var(--gold);}
-
-/* ROW */
-.row{display:flex;gap:.85rem;overflow-x:auto;padding-bottom:.7rem;scrollbar-width:thin;scrollbar-color:var(--surface2) transparent;}
-.row::-webkit-scrollbar{height:3px;}
-.row::-webkit-scrollbar-thumb{background:var(--surface2);}
-
-/* CARD */
-.card{flex-shrink:0;width:185px;cursor:pointer;border-radius:8px;overflow:hidden;transition:transform .27s cubic-bezier(.34,1.56,.64,1),box-shadow .27s;background:var(--surface);position:relative;}
-.card:hover{transform:scale(1.06) translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.7),0 0 0 1px rgba(232,184,75,.12);z-index:10;}
-.cthumb{width:100%;height:112px;background:var(--surface2);position:relative;overflow:hidden;}
-.cthumb img{width:100%;height:100%;object-fit:cover;transition:transform .32s;}
-.card:hover .cthumb img{transform:scale(1.08);}
-.pover{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;}
-.card:hover .pover{opacity:1;}
-.pring{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;font-weight:700;}
-.cstripe{position:absolute;top:0;left:0;right:0;height:3px;}
-.cbody{padding:.6rem .7rem;}
-.csrc{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem;}
-.ctitle{font-family:'DM Serif Display',serif;font-size:.83rem;line-height:1.3;margin-bottom:.32rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.cmeta{display:flex;gap:.35rem;font-size:.64rem;color:var(--text-muted);align-items:center;}
-.ftag{font-size:.56rem;font-weight:700;letter-spacing:.05em;padding:.1rem .32rem;border-radius:2px;text-transform:uppercase;margin-left:auto;border:1px solid currentColor;}
-
-/* SKELETONS */
-.sk{flex-shrink:0;width:185px;border-radius:8px;overflow:hidden;background:var(--surface);}
-.skt{width:100%;height:112px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:sh 1.35s infinite;}
-.skb{padding:.6rem .7rem;}
-.skl{height:8px;border-radius:3px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:sh 1.35s infinite;margin-bottom:.4rem;}
-@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* SEARCH VIEW */
-#sv{display:none;padding:1.5rem 1.75rem 4rem;}
-#sv.on{display:block;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(182px,1fr));gap:.9rem;margin-top:1.1rem;}
-.grid .card{width:100%;}
-.empty{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);}
-.empty .ico{font-size:2.2rem;margin-bottom:.6rem;opacity:.4;}
-
-/* API MODAL */
-#am{position:fixed;inset:0;z-index:9000;background:rgba(4,4,12,.97);display:flex;align-items:center;justify-content:center;}
-.ami{background:var(--surface);border:1px solid rgba(232,184,75,.22);border-radius:16px;padding:2.1rem;max-width:540px;width:93%;}
-.ami h2{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:.06em;color:var(--gold);margin-bottom:.25rem;}
-.ami p{font-size:.8rem;color:var(--text-muted);line-height:1.65;margin-bottom:1.35rem;}
-.arow{display:flex;align-items:center;gap:.65rem;margin-bottom:.85rem;flex-wrap:wrap;}
-.arow label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;min-width:85px;flex-shrink:0;}
-.arow input{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.52rem .85rem;color:var(--text);font-family:monospace;font-size:.8rem;outline:none;transition:border-color .2s;}
-.arow input:focus{border-color:var(--gold);}
-.arow input::placeholder{color:var(--text-dim);}
-.tag{font-size:.62rem;padding:.18rem .48rem;border-radius:3px;font-weight:700;flex-shrink:0;}
-.tg{background:rgba(75,187,110,.12);color:#4bbb6e;border:1px solid rgba(75,187,110,.28);}
-.to{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(232,184,75,.28);}
-.ama{display:flex;gap:.65rem;margin-top:1.35rem;flex-wrap:wrap;}
-.bcn{background:var(--gold);color:#080810;border:none;padding:.6rem 1.6rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;}
-.bcn:hover{opacity:.88;}
-.bsk{background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:.6rem 1.1rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;}
-.bsk:hover{color:var(--text);}
-
-/* TOAST */
-#toast{position:fixed;bottom:1.6rem;right:1.6rem;background:var(--surface2);border:1px solid var(--gold-dim);color:var(--text);padding:.6rem 1rem;border-radius:8px;font-size:.8rem;z-index:1000;transform:translateY(70px);opacity:0;transition:all .28s;}
-#toast.show{transform:translateY(0);opacity:1;}
-
-footer{border-top:1px solid var(--border);padding:1.4rem 1.75rem;text-align:center;font-size:.7rem;color:var(--text-dim);line-height:1.9;}
-footer strong{color:var(--gold);}footer a{color:var(--text-muted);text-decoration:none;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--bg-page); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px 16px; }
+.tracker { display: flex; min-height: 600px; border: 1px solid var(--bdr-light); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-main); width: 100%; max-width: 880px; box-shadow: 0 4px 32px rgba(0,0,0,0.10); }
+.sidebar { width: 200px; min-width: 200px; background: var(--bg-sidebar); border-right: 1px solid var(--bdr-light); display: flex; flex-direction: column; }
+.sidebar-header { padding: 16px 14px 11px; border-bottom: 1px solid var(--bdr-light); }
+.sidebar-title { font-size: 10px; font-weight: 600; color: var(--txt-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.app-list { flex: 1; overflow-y: auto; padding: 8px; }
+.app-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: var(--radius-md); cursor: pointer; margin-bottom: 2px; transition: background 0.12s; border: 1px solid transparent; }
+.app-item:hover { background: var(--bg-hover); }
+.app-item.active { background: var(--bg-main); border-color: var(--bdr-mid); }
+.app-emoji { font-size: 16px; flex-shrink: 0; }
+.app-info { flex: 1; min-width: 0; }
+.app-name { font-size: 13px; font-weight: 500; color: var(--txt-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-prog { font-size: 11px; color: var(--txt-muted); margin-top: 1px; }
+.del-btn { opacity: 0; font-size: 11px; background: none; border: none; cursor: pointer; padding: 2px 5px; border-radius: 4px; color: var(--txt-muted); flex-shrink: 0; }
+.app-item:hover .del-btn { opacity: 1; }
+.del-btn:hover { background: var(--bg-danger); color: var(--txt-danger); }
+.add-btn { margin: 8px; padding: 9px 12px; background: none; border: 1px dashed var(--bdr-mid); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; color: var(--txt-secondary); font-family: var(--font-sans); transition: all 0.12s; text-align: center; }
+.add-btn:hover { background: var(--bg-main); color: var(--txt-primary); }
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 48px; }
+.empty-icon { font-size: 36px; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--txt-primary); }
+.empty-sub { font-size: 13px; color: var(--txt-secondary); text-align: center; line-height: 1.55; max-width: 240px; }
+.app-header { padding: 18px 22px 0; border-bottom: 1px solid var(--bdr-light); flex-shrink: 0; }
+.app-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.app-big-name { font-size: 17px; font-weight: 600; color: var(--txt-primary); }
+.app-date { font-size: 12px; color: var(--txt-muted); margin-top: 1px; }
+.overall-bar-wrap { margin-bottom: 14px; }
+.overall-label { display: flex; justify-content: space-between; margin-bottom: 7px; }
+.overall-label span:first-child { font-size: 12px; color: var(--txt-secondary); }
+.overall-label span:last-child { font-size: 12px; font-weight: 600; color: var(--txt-primary); }
+.bar-track { height: 6px; background: var(--bdr-light); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+.view-tabs { display: flex; }
+.view-tab { padding: 9px 18px; font-size: 13px; font-weight: 500; color: var(--txt-secondary); cursor: pointer; border: none; background: none; font-family: var(--font-sans); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
+.view-tab:hover { color: var(--txt-primary); }
+.view-tab.active { color: var(--txt-primary); border-bottom-color: var(--tab-accent, var(--accent)); }
+.ai-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #16A34A; margin-left: 5px; vertical-align: middle; }
+.phase-tabs { display: flex; overflow-x: auto; flex-shrink: 0; padding: 0 22px; background: var(--bg-surface); border-bottom: 1px solid var(--bdr-light); }
+.phase-tab { padding: 7px 11px; font-size: 11px; font-weight: 600; color: var(--txt-muted); cursor: pointer; border: none; background: none; font-family: var(--font-sans); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; margin-bottom: -1px; letter-spacing: 0.01em; }
+.phase-tab:hover { color: var(--txt-primary); }
+.phase-tab.active { color: var(--txt-primary); border-bottom-color: var(--ph-color); }
+.phase-badge { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 8px; font-size: 9px; font-weight: 700; margin-left: 5px; }
+.content { flex: 1; overflow-y: auto; padding: 18px 22px; }
+.phase-summary { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--bdr-light); margin-bottom: 14px; }
+.phase-summary-text { font-size: 13px; color: var(--txt-secondary); flex: 1; }
+.phase-summary-text strong { color: var(--txt-primary); font-weight: 600; }
+.phase-summary-count { font-size: 12px; font-weight: 600; }
+.phase-section { margin-bottom: 8px; border: 1px solid var(--bdr-light); border-radius: var(--radius-md); overflow: hidden; }
+.section-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-surface); cursor: pointer; user-select: none; transition: background 0.12s; border: none; width: 100%; text-align: left; font-family: var(--font-sans); }
+.section-header:hover { background: var(--bg-hover); }
+.section-title { font-size: 12px; font-weight: 600; color: var(--txt-primary); letter-spacing: 0.01em; flex: 1; }
+.section-meta { font-size: 11px; color: var(--txt-muted); font-weight: 500; }
+.section-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: var(--txt-muted); }
+.section-chevron.open { transform: rotate(90deg); }
+.section-items { border-top: 1px solid var(--bdr-light); overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+.section-items.open { max-height: 2000px; }
+.check-item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 14px; border-bottom: 1px solid var(--bdr-light); cursor: pointer; transition: background 0.1s; }
+.check-item:last-child { border-bottom: none; }
+.check-item:hover { background: var(--bg-surface); }
+.check-box { width: 17px; height: 17px; min-width: 17px; border-radius: 5px; border: 1.5px solid var(--bdr-mid); background: none; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+.check-text { font-size: 13.5px; color: var(--txt-primary); line-height: 1.5; flex: 1; }
+.check-text.done { color: var(--txt-muted); text-decoration: line-through; }
+.check-main { display: flex; align-items: flex-start; gap: 11px; flex: 1; min-width: 0; }
+.note-btn { background: none; border: none; cursor: pointer; padding: 3px 6px; border-radius: 5px; color: var(--txt-muted); font-size: 13px; flex-shrink: 0; display: flex; align-items: center; gap: 3px; transition: all 0.12s; font-family: var(--font-sans); margin-top: -1px; }
+.note-btn:hover { background: var(--bg-hover); color: var(--txt-primary); }
+.note-btn.has-note { color: var(--accent); }
+.note-btn.open { background: var(--bg-hover); color: var(--txt-primary); }
+.note-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.note-editor { padding: 0 14px 12px 42px; background: var(--bg-surface); border-bottom: 1px solid var(--bdr-light); }
+.note-editor textarea { width: 100%; min-height: 64px; padding: 9px 11px; font-size: 13px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-main); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; resize: vertical; line-height: 1.5; transition: border 0.15s; }
+.note-editor textarea:focus { border-color: var(--accent); }
+.check-item { flex-wrap: wrap; }
+.ai-panel { padding: 18px 22px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.ai-desc { font-size: 13px; color: var(--txt-secondary); line-height: 1.65; padding: 12px 14px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--bdr-light); }
+.ai-generate-area { display: flex; flex-direction: column; gap: 10px; }
+.ai-context-row { display: flex; gap: 10px; align-items: flex-end; }
+.ai-context-col { flex: 1; }
+.ai-context-label { font-size: 11px; color: var(--txt-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+.ai-context-col input, .ai-context-col select { width: 100%; padding: 8px 11px; font-size: 13px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-surface); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; transition: border 0.15s; }
+.ai-context-col input:focus, .ai-context-col select:focus { border-color: var(--accent); }
+.ai-gen-btn { padding: 9px 18px; background: var(--accent); border: none; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: white; cursor: pointer; font-weight: 600; align-self: flex-start; display: flex; align-items: center; gap: 7px; transition: opacity 0.15s; }
+.ai-gen-btn:hover { opacity: 0.88; }
+.ai-gen-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.ai-results { display: flex; flex-direction: column; gap: 8px; }
+.ai-insight-card { background: var(--bg-surface); border: 1px solid var(--bdr-light); border-radius: var(--radius-md); padding: 13px 15px; }
+.ai-insight-header { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+.ai-cat-badge { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; letter-spacing: 0.02em; }
+.ai-insight-title { font-size: 13px; font-weight: 600; color: var(--txt-primary); }
+.ai-insight-body { font-size: 13px; color: var(--txt-secondary); line-height: 1.65; }
+.ai-loading { display: flex; align-items: center; gap: 12px; padding: 20px 0; }
+.ai-spinner { width: 16px; height: 16px; border: 2px solid var(--bdr-mid); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ai-loading-text { font-size: 13px; color: var(--txt-secondary); }
+.ai-error { font-size: 13px; color: var(--txt-danger); padding: 12px 14px; background: var(--bg-danger); border-radius: var(--radius-md); border: 1px solid rgba(185,28,28,0.15); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 10; }
+.modal { background: var(--bg-main); border: 1px solid var(--bdr-mid); border-radius: var(--radius-lg); padding: 22px; width: 292px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); }
+.modal-title { font-size: 15px; font-weight: 600; color: var(--txt-primary); margin-bottom: 18px; }
+.modal-field { margin-bottom: 14px; }
+.modal-label { font-size: 12px; color: var(--txt-secondary); margin-bottom: 7px; display: block; font-weight: 500; }
+.modal input { width: 100%; padding: 9px 11px; font-size: 14px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-surface); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; transition: border 0.15s; }
+.modal input:focus { border-color: var(--accent); }
+.emoji-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.emoji-opt { width: 34px; height: 34px; font-size: 17px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); border: 1px solid transparent; cursor: pointer; transition: all 0.1s; }
+.emoji-opt:hover { background: var(--bg-surface); }
+.emoji-opt.sel { border-color: var(--accent); background: var(--bg-surface); }
+.modal-actions { display: flex; gap: 9px; margin-top: 18px; }
+.btn-cancel { flex: 1; padding: 9px; background: none; border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: var(--txt-secondary); cursor: pointer; font-weight: 500; transition: background 0.12s; }
+.btn-cancel:hover { background: var(--bg-surface); }
+.btn-create { flex: 1; padding: 9px; background: var(--accent); border: none; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: white; cursor: pointer; font-weight: 600; transition: opacity 0.12s; }
+.btn-create:hover { opacity: 0.88; }
+.btn-create:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>
 </head>
 <body>
-
-<!-- MODAL -->
-<div id="am">
-  <div class="ami">
-    <div style="font-size:1.9rem;margin-bottom:.4rem;">🎬</div>
-    <h2>FreeTube Setup</h2>
-    <p>Connect your API keys to unlock more sources. <strong style="color:var(--text)">Internet Archive loads instantly — no key needed.</strong> YouTube and TMDB are optional free keys that unlock many more services.</p>
-
-    <div class="arow">
-      <label style="color:var(--c-archive)">🏛 Archive</label>
-      <span style="font-size:.8rem;color:#4bbb6e;font-weight:600;">✅ Works immediately — no key required</span>
-      <span class="tag tg">FREE</span>
-    </div>
-    <div class="arow">
-      <label style="color:var(--c-yt)">▶ YouTube</label>
-      <input id="ky" type="text" placeholder="AIzaSy… (YouTube Data API v3)" onkeydown="if(event.key==='Enter')go()" />
-      <span class="tag to">OPTIONAL</span>
-    </div>
-    <div class="arow">
-      <label style="color:var(--c-tubi)">🎬 TMDB</label>
-      <input id="kt" type="text" placeholder="TMDB API key (v3 auth)" onkeydown="if(event.key==='Enter')go()" />
-      <span class="tag to">OPTIONAL</span>
-    </div>
-    <p style="font-size:.7rem;color:var(--text-dim);margin-top:.6rem;margin-bottom:0;">TMDB unlocks: Tubi · Pluto TV · Amazon Freevee · Crackle · Peacock · Plex · The Roku Channel<br>Free key at <strong style="color:var(--text)">themoviedb.org/settings/api</strong></p>
-    <div class="ama">
-      <button class="bcn" onclick="go()">▶ Launch FreeTube</button>
-      <button class="bsk" onclick="go(true)">Skip — Use Archive Only</button>
-    </div>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav>
-  <div class="logo" onclick="showHome()">Free<span>Tube</span></div>
-  <div class="nav-right">
-    <div class="search-wrap">
-      <span class="si">🔍</span>
-      <input type="text" id="si" placeholder="Search all sources…" />
-    </div>
-    <button class="btn-sm" onclick="document.getElementById('am').style.display='flex'">⚙ API Keys</button>
-  </div>
-</nav>
-
-<!-- SOURCE TABS -->
-<div class="src-bar" id="stabs">
-  <button class="stab on" data-s="all" onclick="setSrc('all',this)"><span class="pip" style="background:var(--gold)"></span>All Sources</button>
-  <button class="stab" data-s="archive" onclick="setSrc('archive',this)"><span class="pip" style="background:var(--c-archive)"></span>Internet Archive</button>
-  <button class="stab" data-s="youtube" id="tyt" onclick="setSrc('youtube',this)" style="display:none"><span class="pip" style="background:var(--c-yt)"></span>YouTube</button>
-  <button class="stab" data-s="tubi" id="ttubi" onclick="setSrc('tubi',this)" style="display:none"><span class="pip" style="background:var(--c-tubi)"></span>Tubi</button>
-  <button class="stab" data-s="pluto" id="tpluto" onclick="setSrc('pluto',this)" style="display:none"><span class="pip" style="background:var(--c-pluto)"></span>Pluto TV</button>
-  <button class="stab" data-s="freevee" id="tfv" onclick="setSrc('freevee',this)" style="display:none"><span class="pip" style="background:var(--c-freevee)"></span>Freevee</button>
-  <button class="stab" data-s="crackle" id="tcrk" onclick="setSrc('crackle',this)" style="display:none"><span class="pip" style="background:var(--c-crackle)"></span>Crackle</button>
-  <button class="stab" data-s="roku" id="troku" onclick="setSrc('roku',this)" style="display:none"><span class="pip" style="background:var(--c-roku)"></span>Roku Channel</button>
-  <button class="stab" data-s="plex" id="tplex" onclick="setSrc('plex',this)" style="display:none"><span class="pip" style="background:var(--c-plex)"></span>Plex</button>
-</div>
-
-<!-- STATUS BAR -->
-<div id="sbar"></div>
-
-<!-- HERO -->
-<div id="hero">
-  <div id="hbg"><img id="himg" src="" alt="" /></div>
-  <div class="hcont">
-    <div class="hbadge" id="hbadge">🎬 Free &amp; Legal</div>
-    <div class="htitle" id="htitle">DISCOVER FREE CINEMA</div>
-    <div class="hmeta"><span id="hchan"></span><span id="hyr"></span></div>
-    <p class="hdesc" id="hdesc">Thousands of free movies &amp; TV shows across multiple services — all legal, all ad-supported.</p>
-    <a id="hbtn" href="#" target="_blank" rel="noopener" class="btn-play">▶ Watch Free</a>
-  </div>
-</div>
-
-<!-- HOME -->
-<main id="hv">
-  <div class="sec">
-    <div class="sech"><div class="sect">🏛 <span style="color:var(--c-archive)">Internet Archive</span> — Public Domain Films</div><span class="sall" onclick="setSrc('archive',document.querySelector('[data-s=archive]'))">Browse →</span></div>
-    <div class="row" id="ra"></div>
-  </div>
-  <div class="sec" id="syt" style="display:none">
-    <div class="sech"><div class="sect">▶ <span style="color:var(--c-yt)">YouTube</span> — Free Movies</div><span class="sall" onclick="setSrc('youtube',document.querySelector('[data-s=youtube]'))">Browse →</span></div>
-    <div class="row" id="ryt"></div>
-  </div>
-  <div class="sec" id="stmdb" style="display:none">
-    <div class="sech"><div class="sect">🎬 <span style="color:var(--c-tubi)">Tubi · Pluto · Freevee</span> — Trending Free</div><span class="sall" onclick="setSrc('tubi',document.querySelector('[data-s=tubi]'))">Browse →</span></div>
-    <div class="row" id="rtmdb"></div>
-  </div>
-  <div class="sec">
-    <div class="sech"><div class="sect">🎞 <span style="color:var(--c-archive)">Classic Cinema</span> — 1920s–1950s</div></div>
-    <div class="row" id="rcls"></div>
-  </div>
-  <div class="sec">
-    <div class="sech"><div class="sect">🎭 <span style="color:var(--c-archive)">Documentaries</span></div></div>
-    <div class="row" id="rdoc"></div>
-  </div>
-</main>
-
-<!-- SEARCH VIEW -->
-<div id="sv">
-  <div class="sech"><div class="sect" id="slbl">Results</div></div>
-  <div class="grid" id="sgrid"></div>
-</div>
-
-<div id="toast"></div>
-
-<footer>
-  <strong>FreeTube</strong> — All content is free, legal, and ad-supported on official services.<br>
-  Powered by <a href="https://archive.org" target="_blank">Internet Archive</a> · <a href="https://youtube.com" target="_blank">YouTube Data API</a> · <a href="https://themoviedb.org" target="_blank">TMDB</a><br>
-  FreeTube does not host or redistribute any media.
-</footer>
-
+<div id="root"></div>
 <script>
-// ── CONFIG ───────────────────────────────────────────
-const SMETA = {
-  all:     {label:'All Sources',       color:'var(--gold)',      bg:'var(--gold-dim)'},
-  archive: {label:'Internet Archive',  color:'var(--c-archive)', bg:'rgba(91,156,246,.12)'},
-  youtube: {label:'YouTube',           color:'var(--c-yt)',      bg:'rgba(255,43,43,.12)'},
-  tubi:    {label:'Tubi',              color:'var(--c-tubi)',    bg:'rgba(250,80,15,.12)'},
-  pluto:   {label:'Pluto TV',          color:'var(--c-pluto)',   bg:'rgba(155,89,245,.12)'},
-  freevee: {label:'Amazon Freevee',    color:'var(--c-freevee)', bg:'rgba(0,188,212,.12)'},
-  crackle: {label:'Crackle',           color:'var(--c-crackle)', bg:'rgba(232,184,75,.12)'},
-  roku:    {label:'Roku Channel',      color:'var(--c-roku)',    bg:'rgba(108,43,217,.12)'},
-  plex:    {label:'Plex',              color:'var(--c-plex)',    bg:'rgba(229,160,13,.12)'},
+const PHASES = [
+  { id:'prelaunch', phase:'Pre-Launch', days:'Days -30 to 0', color:'#0D9488',
+    sections:[
+      { title:'App Store Preparation', items:[
+        {id:'a1',text:'Finalize app name (30 char max)'},{id:'a2',text:'Write subtitle (30 char max)'},{id:'a3',text:'Write keyword field (100 char max)'},{id:'a4',text:'Write full description (4,000 char max)'},{id:'a5',text:'Write promotional text (170 char max)'},{id:'a6',text:'Design app icon (1024×1024px)'},{id:'a7',text:'Create screenshots for all device sizes'},{id:'a8',text:'Create App Preview video'},{id:'a9',text:'Choose primary & secondary categories'},{id:'a10',text:'Set age rating & content advisories'},{id:'a11',text:'Set pricing & availability (all regions)'},{id:'a12',text:'Create support URL & privacy policy page'},
+      ]},
+      { title:'Social & Community Setup', items:[
+        {id:'b1',text:'Optimize X (Twitter) profile for the app'},{id:'b2',text:'Create TikTok account'},{id:'b3',text:'Set up Instagram account'},{id:'b4',text:'Identify 5+ key subreddits for your audience'},{id:'b5',text:'Build email waitlist with landing page'},{id:'b6',text:'Set up link-in-bio'},
+      ]},
+      { title:'Content Pre-Production', items:[
+        {id:'c1',text:'Create teaser / announcement post'},{id:'c2',text:'Record build-in-public behind-the-scenes content'},{id:'c3',text:'Write launch announcement blog post'},{id:'c4',text:'Produce launch day video (YouTube / TikTok)'},{id:'c5',text:'Design promotional graphics & social assets'},
+      ]},
+      { title:'Press & Outreach', items:[
+        {id:'d1',text:'Write press release'},{id:'d2',text:'Build list: AppAdvice, MacStories, 9to5Mac'},{id:'d3',text:'Identify podcast hosts in your niche'},{id:'d4',text:'Reach out to influencers & early adopters'},
+      ]},
+      { title:'Beta Testing', items:[
+        {id:'e1',text:'Set up TestFlight internal testing'},{id:'e2',text:'Recruit 20+ external beta testers'},{id:'e3',text:'Collect & prioritize beta feedback'},{id:'e4',text:'Fix critical bugs from beta round'},
+      ]},
+    ]
+  },
+  { id:'launch', phase:'Launch Week', days:'Days 1–7', color:'#7C3AED',
+    sections:[
+      { title:'App Store', items:[
+        {id:'f1',text:'Submit app to App Store for review'},{id:'f2',text:'Monitor crash reports in Xcode Organizer'},{id:'f3',text:'Track keyword rankings in App Store Connect'},{id:'f4',text:'Respond to every early App Store review'},
+      ]},
+      { title:'Launch Announcements', items:[
+        {id:'g1',text:'Publish launch post on X / Twitter'},{id:'g2',text:'Post launch reel on TikTok & Instagram'},{id:'g3',text:'Publish launch video on YouTube'},{id:'g4',text:'Email your waitlist'},{id:'g5',text:'Submit & post on Product Hunt'},{id:'g6',text:'Post in all relevant subreddits'},{id:'g7',text:'DM beta testers requesting App Store reviews'},{id:'g8',text:'Send download codes to app review sites'},{id:'g9',text:'Post "Day 1 results" story / update'},
+      ]},
+    ]
+  },
+  { id:'postlaunch', phase:'Post-Launch', days:'Days 8–30', color:'#D97706',
+    sections:[
+      { title:'Analysis', items:[
+        {id:'h1',text:'Analyze Week 1 metrics (downloads, revenue, retention)'},{id:'h2',text:'Analyze keyword performance & iterate'},{id:'h3',text:'Identify top acquisition channels'},
+      ]},
+      { title:'App Store Optimization', items:[
+        {id:'i1',text:'A/B test screenshots in App Store Connect'},{id:'i2',text:'Respond to every App Store review'},{id:'i3',text:'Submit first bug fix / polish update'},
+      ]},
+      { title:'Marketing', items:[
+        {id:'j1',text:'Continue posting 3×/week on all social channels'},{id:'j2',text:'Pitch to relevant podcasts'},{id:'j3',text:'Post "first month results" transparency content'},{id:'j4',text:'Submit to app directories (AppShopper, AlternativeTo)'},{id:'j5',text:'Set up Apple Search Ads basic campaign'},{id:'j6',text:'Pitch to newsletter curators (iOS Dev Weekly, etc.)'},
+      ]},
+    ]
+  },
+  { id:'growth', phase:'Growth', days:'Days 31–60', color:'#16A34A',
+    sections:[
+      { title:'ASO & Product', items:[
+        {id:'k1',text:'Revise ASO metadata based on 30-day data'},{id:'k2',text:'Plan first major feature update from user feedback'},{id:'k3',text:'Set up push notification re-engagement campaign'},
+      ]},
+      { title:'Paid & Partnerships', items:[
+        {id:'l1',text:'Scale Apple Search Ads (optimize bids & keywords)'},{id:'l2',text:'Run a limited-time promotional price or sale'},{id:'l3',text:'Cross-promote with complementary indie apps'},{id:'l4',text:'Apply for App Store featuring via App Store Connect'},
+      ]},
+      { title:'Content & Community', items:[
+        {id:'m1',text:'Create "how to use" tutorial content series'},{id:'m2',text:'Gather power user case studies / testimonials'},{id:'m3',text:'Submit for Apple Design Awards (if eligible)'},{id:'m4',text:'Create SEO comparison / alternative content'},
+      ]},
+    ]
+  },
+  { id:'scale', phase:'Scale', days:'Days 61–90', color:'#DC2626',
+    sections:[
+      { title:'Product & Store', items:[
+        {id:'n1',text:'Launch first major feature update (v1.1+)'},{id:'n2',text:'Follow up on App Store featuring pitch'},{id:'n3',text:'Analyze 90-day cohort (retention, LTV, churn)'},{id:'n4',text:'Build v2 roadmap based on user input'},
+      ]},
+      { title:'Content & Retrospective', items:[
+        {id:'o1',text:'Write 90-day retrospective blog post'},{id:'o2',text:'Create "90-day lessons" YouTube video'},{id:'o3',text:'Submit to additional award programs'},{id:'o4',text:'Document long-term content & growth strategy'},
+      ]},
+    ]
+  }
+];
+
+const ALL_IDS = PHASES.flatMap(p=>p.sections.flatMap(s=>s.items.map(i=>i.id)));
+const TOTAL = ALL_IDS.length;
+const EMOJIS = ['📱','🚀','⭐','🎯','💡','🔥','🌟','💎','🎮','🎵','📸','🌿','🏆','⚡','🎨'];
+const CAT_COLORS = {
+  'ASO':      ['#CCFBF1','#0F766E'], 'Content':  ['#EDE9FE','#6D28D9'],
+  'Community':['#FEF3C7','#92400E'], 'Paid':     ['#DCFCE7','#166534'],
+  'PR':       ['#FEE2E2','#991B1B'], 'Analytics':['#DBEAFE','#1E40AF'],
+  'Strategy': ['#FCE7F3','#9D174D'], 'General':  ['#F3F4F6','#374151']
 };
-const FREE_P = {73:'Tubi',300:'Pluto TV',10:'Amazon Freevee',117:'Crackle',207:'Roku Channel',538:'Plex',386:'Peacock Free',212:'Hoopla'};
-const P_COLOR = {73:'var(--c-tubi)',300:'var(--c-pluto)',10:'var(--c-freevee)',117:'var(--c-crackle)',207:'var(--c-roku)',538:'var(--c-plex)',386:'var(--c-freevee)',212:'var(--c-archive)'};
-const P_LINK  = {
-  73:  t=>`https://tubitv.com/search?q=${enc(t)}`,
-  300: t=>`https://pluto.tv/search?q=${enc(t)}`,
-  10:  t=>`https://www.amazon.com/s?k=${enc(t)}&i=instant-video&rh=n%3A2858778011`,
-  117: t=>`https://www.crackle.com/search/${enc(t)}`,
-  207: t=>`https://therokuchannel.roku.com/search?q=${enc(t)}`,
-  538: t=>`https://app.plex.tv/desktop/#!/search?query=${enc(t)}`,
-  386: t=>`https://www.peacocktv.com/watch/search?q=${enc(t)}`,
-  212: t=>`https://www.hoopladigital.com/search/${enc(t)}`,
+
+let state = {
+  apps:[], checks:{}, notes:{}, openNote:null, selectedId:null, activePhase:'prelaunch',
+  activeView:'checklist', showModal:false, newName:'', newEmoji:'📱',
+  aiState:'idle', aiResults:[], aiAppType:'', aiPhaseOverride:'', aiStream:'',
+  collapsed:{}
 };
-const PROV_SRC = {73:'tubi',300:'pluto',10:'freevee',117:'crackle',207:'roku',538:'plex',386:'freevee',212:'archive'};
 
-// ── STATE ────────────────────────────────────────────
-let K = {yt:'',tmdb:''};
-let curSrc = 'all';
-
-try { K.yt=localStorage.getItem('ft_yt')||''; K.tmdb=localStorage.getItem('ft_tmdb')||''; } catch(e){}
-
-// ── BOOT ─────────────────────────────────────────────
-if (K.yt || K.tmdb) {
-  document.getElementById('ky').value = K.yt;
-  document.getElementById('kt').value = K.tmdb;
-  document.getElementById('am').style.display = 'none';
-  init();
+function loadData() {
+  try {
+    const a=localStorage.getItem('mktr3_apps'), c=localStorage.getItem('mktr3_checks'), col=localStorage.getItem('mktr3_collapsed'), n=localStorage.getItem('mktr3_notes');
+    if(a) state.apps=JSON.parse(a);
+    if(c) state.checks=JSON.parse(c);
+    if(col) state.collapsed=JSON.parse(col);
+    if(n) state.notes=JSON.parse(n);
+  } catch(e) {}
+  render();
 }
 
-function go(skipOpt) {
-  if (!skipOpt) {
-    K.yt   = document.getElementById('ky').value.trim();
-    K.tmdb = document.getElementById('kt').value.trim();
+function saveData() {
+  try {
+    localStorage.setItem('mktr3_apps',JSON.stringify(state.apps));
+    localStorage.setItem('mktr3_checks',JSON.stringify(state.checks));
+    localStorage.setItem('mktr3_collapsed',JSON.stringify(state.collapsed));
+    localStorage.setItem('mktr3_notes',JSON.stringify(state.notes));
+  } catch(e) {}
+}
+
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toggleNote(key) {
+  state.openNote = state.openNote===key ? null : key;
+  render();
+  if(state.openNote===key) {
+    setTimeout(()=>{
+      const ta=document.getElementById('note-ta-'+key);
+      if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); }
+    },30);
   }
-  try { localStorage.setItem('ft_yt',K.yt); localStorage.setItem('ft_tmdb',K.tmdb); } catch(e){}
-  document.getElementById('am').style.display = 'none';
-  init();
 }
-
-function init() {
-  updateStatus();
-  showTabs();
-  loadHome();
-  setupSearch();
-}
-
-function updateStatus() {
-  document.getElementById('sbar').innerHTML =
-    `<div class="apill ok"><div class="pip2"></div>🏛 Internet Archive</div>` +
-    `<div class="apill ${K.yt?'ok':'no'}"><div class="pip2"></div>▶ YouTube</div>` +
-    `<div class="apill ${K.tmdb?'ok':'no'}"><div class="pip2"></div>🎬 TMDB (Tubi · Pluto · Freevee · Crackle · Roku · Plex)</div>` +
-    `<span style="margin-left:auto;font-size:.68rem;color:var(--text-dim);font-style:italic;">All content opens on official streaming sites</span>`;
-}
-
-function showTabs() {
-  if (K.yt)   document.getElementById('tyt').style.display   = 'flex';
-  if (K.tmdb) ['ttubi','tpluto','tfv','tcrk','troku','tplex'].forEach(id => document.getElementById(id).style.display='flex');
-}
-
-// ── LOAD HOME ────────────────────────────────────────
-async function loadHome() {
-  skels('ra',8); skels('rcls',8); skels('rdoc',8);
-  if (K.yt)   { document.getElementById('syt').style.display='block';   skels('ryt',8); }
-  if (K.tmdb) { document.getElementById('stmdb').style.display='block'; skels('rtmdb',8); }
-
-  // Archive rows in parallel
-  const [main, classics, docs] = await Promise.all([
-    archSearch('feature film', 10),
-    archSearch('classic film noir western 1930 1940 1950', 8),
-    archSearch('documentary educational film', 8),
-  ]);
-
-  renderRow('ra', main, 'archive');
-  renderRow('rcls', classics, 'archive');
-  renderRow('rdoc', docs, 'archive');
-  if (main.length) setHero(main[0], 'archive');
-
-  if (K.yt) {
-    ytSearch('full movie free official', 8).then(r => renderRow('ryt', r, 'youtube'));
-  }
-  if (K.tmdb) {
-    tmdbTrending().then(r => renderRow('rtmdb', r, 'tmdb'));
+function updateNote(key,val) {
+  if(val && val.trim()) state.notes[key]=val;
+  else delete state.notes[key];
+  saveData();
+  // update the note-btn indicator without full re-render to preserve focus
+  const btn=document.getElementById('note-btn-'+key);
+  if(btn) {
+    const has=!!state.notes[key];
+    btn.classList.toggle('has-note',has);
+    btn.innerHTML = has ? '<span class="note-dot"></span>Note' : 'Note';
   }
 }
 
-// ── ARCHIVE API (no key) ─────────────────────────────
-async function archSearch(q, rows=10) {
+function getProgress(appId,phaseId) {
+  const phase=PHASES.find(p=>p.id===phaseId); if(!phase) return {checked:0,total:0};
+  const items=phase.sections.flatMap(s=>s.items);
+  return {checked:items.filter(i=>state.checks[appId+'-'+i.id]).length, total:items.length};
+}
+function getTotal(appId) { return {checked:ALL_IDS.filter(id=>state.checks[appId+'-'+id]).length, total:TOTAL}; }
+function pct(n,t) { return t===0?0:Math.round((n/t)*100); }
+
+function colKey(appId,phaseId,sec) { return appId+'|'+phaseId+'|'+sec; }
+function toggleSection(appId,phaseId,sec) { const k=colKey(appId,phaseId,sec); state.collapsed[k]=!state.collapsed[k]; saveData(); render(); }
+function isSectionOpen(appId,phaseId,sec) { return state.collapsed[colKey(appId,phaseId,sec)]!==true; }
+
+async function generateAI() {
+  const app=state.apps.find(a=>a.id===state.selectedId); if(!app) return;
+  state.aiState='loading'; state.aiResults=[]; render();
+  const phaseName=state.aiPhaseOverride||PHASES.find(p=>p.id===state.activePhase)?.phase||'Pre-Launch';
+  const {checked,total}=getTotal(app.id);
+  const prompt=`You are an expert iOS app marketing strategist specializing in indie developer launches.\n\nApp: "${app.name}" (${state.aiAppType||app.name})\nMarketing phase: ${phaseName}\nChecklist progress: ${checked}/${total} tasks completed\n\nGenerate 5 creative, specific, high-impact marketing ideas that an indie iOS developer would NOT typically think of for this phase. Go well beyond standard advice.\n\nRespond ONLY with valid JSON — no markdown, no backticks, no preamble:\n{"insights":[{"title":"...","category":"ASO|Content|Community|Paid|PR|Analytics|Strategy","body":"2-3 sentence specific, actionable tip"}]}`;
   try {
-    const p = new URLSearchParams({
-      q: `mediatype:movies AND subject:(${q}) AND -subject:spam`,
-      fl: 'identifier,title,description,year,subject',
-      rows, output:'json', sort:'downloads desc'
-    });
-    const r = await fetch(`https://archive.org/advancedsearch.php?${p}`);
-    const d = await r.json();
-    return (d.response?.docs||[]).map(i=>({
-      id:i.identifier, title:i.title||i.identifier,
-      channel:'Internet Archive',
-      thumb:`https://archive.org/services/img/${i.identifier}`,
-      year:i.year||'',
-      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
-      url:`https://archive.org/details/${i.identifier}`,
-      src:'archive'
-    }));
-  } catch(e){ return []; }
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();
+    if(data.error) throw new Error(data.error.message);
+    const text=data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+    state.aiResults=parsed.insights||[]; state.aiState='done';
+  } catch(e) { state.aiState='error'; state.aiStream=e.message||'Something went wrong.'; }
+  render();
 }
 
-// ── YOUTUBE API ──────────────────────────────────────
-async function ytSearch(q, n=10) {
-  if (!K.yt) return [];
-  try {
-    const p = new URLSearchParams({part:'snippet',q,type:'video',videoEmbeddable:'true',maxResults:n,key:K.yt});
-    const r = await fetch(`https://www.googleapis.com/youtube/v3/search?${p}`);
-    const d = await r.json();
-    if (d.error) { toast('⚠️ YouTube: '+d.error.message.slice(0,55)); return []; }
-    return (d.items||[]).filter(i=>i.id?.videoId).map(i=>({
-      id:i.id.videoId, title:dh(i.snippet.title),
-      channel:i.snippet.channelTitle,
-      thumb:i.snippet.thumbnails?.high?.url||i.snippet.thumbnails?.default?.url||'',
-      year:(i.snippet.publishedAt||'').slice(0,4),
-      desc:dh(i.snippet.description||''),
-      url:`https://www.youtube.com/watch?v=${i.id.videoId}`,
-      src:'youtube'
-    }));
-  } catch(e){ return []; }
+function chevron(open) {
+  return `<svg class="section-chevron ${open?'open':''}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 3 11 8 6 13"/></svg>`;
 }
 
-// ── TMDB API ─────────────────────────────────────────
-async function tmdbTrending() {
-  if (!K.tmdb) return [];
-  try {
-    const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${K.tmdb}`);
-    const d = await r.json();
-    if (d.status_message) { toast('⚠️ TMDB: '+d.status_message.slice(0,55)); return []; }
-    const movies = (d.results||[]).slice(0,12);
-    const res = await Promise.all(movies.map(m=>tmdbProviders(m,'movie')));
-    return res.filter(Boolean);
-  } catch(e){ return []; }
-}
+function render() {
+  const root=document.getElementById('root');
+  const app=state.apps.find(a=>a.id===state.selectedId);
+  const phase=PHASES.find(p=>p.id===state.activePhase);
 
-async function tmdbProviders(item, type) {
-  try {
-    const r = await fetch(`https://api.themoviedb.org/3/${type}/${item.id}/watch/providers?api_key=${K.tmdb}`);
-    const d = await r.json();
-    const us = d.results?.US;
-    const free = [...(us?.free||[]),...(us?.flatrate||[])].filter(p=>FREE_P[p.provider_id]);
-    if (!free.length) return null;
-    const prov = free[0]; const pid = prov.provider_id;
-    const title = item.title||item.name||'';
-    return {
-      id:String(item.id), title,
-      channel:FREE_P[pid]||'Free Streaming',
-      thumb:item.poster_path?`https://image.tmdb.org/t/p/w500${item.poster_path}`:'',
-      year:(item.release_date||item.first_air_date||'').slice(0,4),
-      desc:item.overview||'',
-      url:P_LINK[pid]?P_LINK[pid](title):'#',
-      src:'tmdb', provider:pid,
-    };
-  } catch(e){ return null; }
-}
+  const sidebarItems=state.apps.map(a=>{
+    const {checked,total}=getTotal(a.id);
+    return `<div class="app-item ${a.id===state.selectedId?'active':''}" onclick="selectApp('${a.id}')">
+      <span class="app-emoji">${a.emoji}</span>
+      <div class="app-info"><div class="app-name">${a.name}</div><div class="app-prog">${pct(checked,total)}% complete</div></div>
+      <button class="del-btn" onclick="event.stopPropagation();delApp('${a.id}')">✕</button>
+    </div>`;
+  }).join('')||'<div style="padding:12px 10px;font-size:12px;color:var(--txt-muted)">No apps yet</div>';
 
-async function tmdbSearch(q, filterSrc) {
-  if (!K.tmdb) return [];
-  try {
-    const r = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${K.tmdb}&query=${enc(q)}&include_adult=false`);
-    const d = await r.json();
-    const items = (d.results||[]).filter(x=>x.media_type==='movie'||x.media_type==='tv').slice(0,14);
-    const res = await Promise.all(items.map(async m => {
-      const item = await tmdbProviders(m, m.media_type);
-      if (!item) return null;
-      // Filter by source tab
-      if (filterSrc === 'all' || !filterSrc) return item;
-      const provSrc = PROV_SRC[item.provider] || '';
-      return provSrc === filterSrc ? item : null;
-    }));
-    return res.filter(Boolean);
-  } catch(e){ return []; }
-}
+  let mainContent='';
+  if(!app) {
+    mainContent=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No app selected</div><div class="empty-sub">Add an app from the sidebar to start tracking your 90-day launch checklist.</div></div>`;
+  } else {
+    const {checked:tc,total:tt}=getTotal(app.id);
+    const barColor=phase?.color||'#2563EB';
+    const isChecklist=state.activeView==='checklist';
+    const {checked:phC,total:phT}=getProgress(app.id,state.activePhase);
+    const phColor=phase?.color||'#2563EB';
 
-// ── RENDER ────────────────────────────────────────────
-function renderRow(id, items, hint) {
-  const el = document.getElementById(id); if (!el) return;
-  if (!items.length) { el.innerHTML = `<div class="empty" style="padding:1.5rem .5rem;text-align:left;"><div class="ico" style="font-size:1.4rem;margin-bottom:.4rem;">🎬</div><p style="font-size:.78rem;">No content available.</p></div>`; return; }
-  el.innerHTML = items.map(x=>card(x)).join('');
-}
+    const phaseTabs=PHASES.map(ph=>{
+      const {checked:pc}=getProgress(app.id,ph.id);
+      const phItems=ph.sections.flatMap(s=>s.items).length;
+      const done=pc===phItems;
+      return `<button class="phase-tab ${ph.id===state.activePhase?'active':''}" style="--ph-color:${ph.color}" onclick="setPhase('${ph.id}')">
+        ${ph.phase}<span class="phase-badge" style="background:${done?ph.color+'22':'var(--bdr-light)'};color:${done?ph.color:'var(--txt-muted)'}">${pc}</span>
+      </button>`;
+    }).join('');
 
-function card(x) {
-  const s = x.src||'archive';
-  const pid = x.provider;
-  const color = s==='tmdb'&&pid ? (P_COLOR[pid]||'var(--gold)') : (SMETA[s]?.color||'var(--gold)');
-  const label = s==='tmdb'&&pid ? (FREE_P[pid]||'Free') : (SMETA[s]?.label||s);
-  const url = ej(x.url||'#');
-  return `<div class="card" onclick="window.open('${url}','_blank')">
-    <div class="cstripe" style="background:${color}"></div>
-    <div class="cthumb">
-      <img src="${x.thumb}" alt="${eh(x.title)}" loading="lazy"
-        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 185 112%22><rect fill=%22%2310101c%22 width=%22185%22 height=%22112%22/><text fill=%22%23333%22 font-size=%2230%22 x=%2292%22 y=%2256%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>🎬</text></svg>'" />
-      <div class="pover"><div class="pring" style="background:${color}">▶</div></div>
+    let viewContent='';
+    if(isChecklist) {
+      const sections=phase?.sections.map(sec=>{
+        const open=isSectionOpen(app.id,state.activePhase,sec.title);
+        const secChecked=sec.items.filter(i=>state.checks[app.id+'-'+i.id]).length;
+        const escapedTitle=sec.title.replace(/'/g,"\\'");
+        const items=sec.items.map(item=>{
+          const key=app.id+'-'+item.id; const done=!!state.checks[key];
+          const hasNote=!!state.notes[key]; const noteOpen=state.openNote===key;
+          const noteVal=escapeHtml(state.notes[key]||'');
+          const editor = noteOpen ? `<div class="note-editor" onclick="event.stopPropagation()">
+              <textarea id="note-ta-${key}" placeholder="Add a note for this task…" oninput="updateNote('${key}',this.value)">${noteVal}</textarea>
+            </div>` : '';
+          return `<div class="check-item">
+            <div class="check-main" onclick="toggle('${key}')">
+              <div class="check-box" style="${done?'background:'+phColor+';border-color:'+phColor:''}">
+                ${done?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>':''}
+              </div>
+              <span class="check-text ${done?'done':''}">${item.text}</span>
+            </div>
+            <button id="note-btn-${key}" class="note-btn ${hasNote?'has-note':''} ${noteOpen?'open':''}" onclick="event.stopPropagation();toggleNote('${key}')" title="${hasNote?'Edit note':'Add note'}">${hasNote?'<span class="note-dot"></span>Note':'Note'}</button>
+            ${editor}
+          </div>`;
+        }).join('');
+        return `<div class="phase-section">
+          <button class="section-header" onclick="toggleSection('${app.id}','${state.activePhase}','${escapedTitle}')">
+            ${chevron(open)}<span class="section-title">${sec.title}</span>
+            <span class="section-meta">${secChecked} / ${sec.items.length}</span>
+          </button>
+          <div class="section-items ${open?'open':''}">${items}</div>
+        </div>`;
+      }).join('');
+
+      viewContent=`
+        <div class="phase-tabs">${phaseTabs}</div>
+        <div class="content">
+          <div class="phase-summary">
+            <span class="phase-summary-text"><strong>${phase?.phase||''}</strong> &nbsp;·&nbsp; ${phase?.days||''}</span>
+            <span class="phase-summary-count" style="color:${phColor}">${phC} / ${phT} done</span>
+          </div>
+          ${sections}
+        </div>`;
+    } else {
+      const phaseOptions=PHASES.map(p=>`<option value="${p.phase}" ${state.aiPhaseOverride===p.phase?'selected':''}>${p.phase}</option>`).join('');
+      let resultsHtml='';
+      if(state.aiState==='loading') {
+        resultsHtml=`<div class="ai-loading"><div class="ai-spinner"></div><span class="ai-loading-text">Generating ideas for <strong>${app.name}</strong>…</span></div>`;
+      } else if(state.aiState==='error') {
+        resultsHtml=`<div class="ai-error">Error: ${state.aiStream}</div>`;
+      } else if(state.aiState==='done'&&state.aiResults.length) {
+        resultsHtml=`<div class="ai-results">${state.aiResults.map(ins=>{
+          const [bg,fg]=CAT_COLORS[ins.category]||CAT_COLORS['General'];
+          return `<div class="ai-insight-card"><div class="ai-insight-header"><span class="ai-cat-badge" style="background:${bg};color:${fg}">${ins.category}</span><span class="ai-insight-title">${ins.title}</span></div><div class="ai-insight-body">${ins.body}</div></div>`;
+        }).join('')}</div>`;
+      }
+      viewContent=`
+        <div class="ai-panel">
+          <div class="ai-desc">Describe your app and choose a phase — Claude will surface <strong>5 high-impact ideas</strong> you may not have thought of, tailored to your niche and stage.</div>
+          <div class="ai-generate-area">
+            <div class="ai-context-row">
+              <div class="ai-context-col">
+                <label class="ai-context-label">App type / niche</label>
+                <input type="text" placeholder="e.g. habit tracker, cooking converter…" value="${state.aiAppType}" oninput="state.aiAppType=this.value" />
+              </div>
+              <div class="ai-context-col" style="max-width:138px">
+                <label class="ai-context-label">Phase</label>
+                <select onchange="state.aiPhaseOverride=this.value"><option value="">Current phase</option>${phaseOptions}</select>
+              </div>
+            </div>
+            <button class="ai-gen-btn" onclick="generateAI()" ${state.aiState==='loading'?'disabled':''}>
+              ${state.aiState==='loading'?'<div class="ai-spinner" style="border-top-color:white;width:14px;height:14px;border-width:2px"></div> Generating…':'✦ Generate ideas'}
+            </button>
+          </div>
+          ${resultsHtml}
+        </div>`;
+    }
+
+    mainContent=`
+      <div class="app-header">
+        <div class="app-title-row">
+          <span style="font-size:22px">${app.emoji}</span>
+          <div><div class="app-big-name">${app.name}</div><div class="app-date">Added ${app.createdAt}</div></div>
+        </div>
+        <div class="overall-bar-wrap">
+          <div class="overall-label"><span>Overall progress</span><span>${tc} / ${tt} tasks &nbsp;·&nbsp; ${pct(tc,tt)}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct(tc,tt)}%;background:${barColor}"></div></div>
+        </div>
+        <div class="view-tabs">
+          <button class="view-tab ${isChecklist?'active':''}" style="--tab-accent:${barColor}" onclick="setView('checklist')">Checklist</button>
+          <button class="view-tab ${!isChecklist?'active':''}" style="--tab-accent:#16A34A" onclick="setView('ai')">AI insights<span class="ai-dot"></span></button>
+        </div>
+      </div>
+      ${viewContent}`;
+  }
+
+  const modal=state.showModal?`<div class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-title">Add new app</div>
+      <div class="modal-field"><label class="modal-label">App name</label><input id="nameInput" type="text" placeholder="e.g. Tethyr, KitchenKit…" value="${state.newName}" oninput="state.newName=this.value" onkeydown="if(event.key==='Enter')createApp()" /></div>
+      <div class="modal-field"><label class="modal-label">Icon</label><div class="emoji-grid">${EMOJIS.map(e=>`<div class="emoji-opt ${e===state.newEmoji?'sel':''}" onclick="setEmoji('${e}')">${e}</div>`).join('')}</div></div>
+      <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-create" onclick="createApp()">Add app</button></div>
     </div>
-    <div class="cbody">
-      <div class="csrc" style="color:${color}">${eh(label)}</div>
-      <div class="ctitle">${eh(x.title)}</div>
-      <div class="cmeta"><span>${x.year||''}</span><span class="ftag" style="color:${color}">FREE</span></div>
-    </div>
-  </div>`;
+  </div>`:'';
+
+  root.innerHTML=`<div class="tracker"><div class="sidebar"><div class="sidebar-header"><div class="sidebar-title">My apps</div></div><div class="app-list">${sidebarItems}</div><button class="add-btn" onclick="showModal()">+ Add app</button></div><div class="main">${mainContent}</div>${modal}</div>`;
+  if(state.showModal) setTimeout(()=>{ document.getElementById('nameInput')?.focus(); },50);
 }
 
-function skels(id, n) {
-  const el = document.getElementById(id); if (!el) return;
-  el.innerHTML = Array(n).fill(0).map(()=>`<div class="sk"><div class="skt"></div><div class="skb"><div class="skl" style="width:48%;height:7px"></div><div class="skl"></div><div class="skl" style="width:33%;height:7px"></div></div></div>`).join('');
+function selectApp(id) { state.selectedId=id; state.activePhase='prelaunch'; state.activeView='checklist'; state.aiState='idle'; state.aiResults=[]; render(); }
+function setPhase(id) { state.activePhase=id; render(); }
+function setView(v) { state.activeView=v; render(); }
+function toggle(key) { state.checks[key]=!state.checks[key]; saveData(); render(); }
+function showModal() { state.showModal=true; state.newName=''; state.newEmoji='📱'; render(); }
+function closeModal(e) { if(!e||e.target.classList.contains('modal-overlay')){ state.showModal=false; render(); } }
+function setEmoji(e) { state.newEmoji=e; render(); }
+function createApp() {
+  if(!state.newName.trim()) return;
+  const a={id:Date.now().toString(),name:state.newName.trim(),emoji:state.newEmoji,createdAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+  state.apps.push(a); state.selectedId=a.id; state.activePhase='prelaunch'; state.activeView='checklist'; state.showModal=false; saveData(); render();
+}
+function delApp(id) {
+  state.apps=state.apps.filter(a=>a.id!==id);
+  Object.keys(state.checks).forEach(k=>{ if(k.startsWith(id+'-')) delete state.checks[k]; });
+  if(state.selectedId===id) state.selectedId=state.apps[0]?.id||null;
+  saveData(); render();
 }
 
-// ── HERO ─────────────────────────────────────────────
-function setHero(x, s) {
-  const m = SMETA[s]||SMETA.archive;
-  const badge = document.getElementById('hbadge');
-  badge.textContent = '🎬 '+m.label;
-  badge.style.cssText = `background:${m.bg};border:1px solid ${m.color};color:${m.color};`;
-  document.getElementById('htitle').textContent = x.title;
-  document.getElementById('hchan').textContent  = x.channel;
-  document.getElementById('hyr').textContent    = x.year ? ' · '+x.year : '';
-  const raw = Array.isArray(x.desc)?x.desc[0]:(x.desc||'');
-  document.getElementById('hdesc').textContent  = raw.slice(0,160)+(raw.length>160?'…':'') || 'Free & legal streaming — click to watch.';
-  document.getElementById('himg').src = x.thumb||'';
-  document.getElementById('hbtn').href = x.url||'#';
-}
-
-// ── SOURCE SWITCH ────────────────────────────────────
-function setSrc(s, el) {
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
-  if (el) el.classList.add('on');
-  curSrc = s;
-  const q = document.getElementById('si').value.trim();
-  if (q) doSearch(q); else showHome();
-}
-
-// ── SEARCH ────────────────────────────────────────────
-function setupSearch() {
-  const inp = document.getElementById('si');
-  let tm;
-  inp.addEventListener('input', ()=>{ clearTimeout(tm); const q=inp.value.trim(); if(!q){showHome();return;} tm=setTimeout(()=>doSearch(q),650); });
-  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){clearTimeout(tm);const q=inp.value.trim();if(q)doSearch(q);} });
-}
-
-async function doSearch(q) {
-  const srcName = SMETA[curSrc]?.label || curSrc;
-  document.getElementById('hv').style.display = 'none';
-  document.getElementById('sv').classList.add('on');
-  document.getElementById('slbl').textContent = `"${q}" — ${curSrc==='all'?'All Sources':srcName}`;
-  const grid = document.getElementById('sgrid');
-  grid.innerHTML = Array(8).fill(0).map(()=>`<div class="sk"><div class="skt"></div><div class="skb"><div class="skl" style="width:50%"></div><div class="skl"></div></div></div>`).join('');
-
-  let results = [];
-  const tasks = [];
-  if (curSrc==='all'||curSrc==='archive') tasks.push(archSearch(q,10).then(r=>results.push(...r)));
-  if ((curSrc==='all'||curSrc==='youtube')&&K.yt) tasks.push(ytSearch(`${q} full movie OR full episode free`,8).then(r=>results.push(...r)));
-  if ((curSrc==='all'||['tubi','pluto','freevee','crackle','roku','plex'].includes(curSrc))&&K.tmdb) tasks.push(tmdbSearch(q,curSrc==='all'?null:curSrc).then(r=>results.push(...r)));
-
-  await Promise.all(tasks);
-
-  if (!results.length) {
-    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ico">🎬</div><p style="font-size:.82rem">No results found${!K.tmdb&&!K.yt?' — add API keys to unlock more sources':''}.</p></div>`;
-    return;
-  }
-  grid.innerHTML = results.map(x=>card(x)).join('');
-}
-
-function showHome() {
-  document.getElementById('hv').style.display = 'block';
-  document.getElementById('sv').classList.remove('on');
-  document.getElementById('si').value = '';
-}
-
-// ── UTILS ─────────────────────────────────────────────
-const enc = s => encodeURIComponent(s);
-const dh  = s => { const t=document.createElement('textarea'); t.innerHTML=s; return t.value; };
-const eh  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const ej  = s => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,'\\"');
-function toast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
+loadData();
 </script>
 </body>
 </html>

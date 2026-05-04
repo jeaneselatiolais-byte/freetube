@@ -3,469 +3,1054 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Pre-Launch Marketing Tracker</title>
+<title>Marquee Folio — The Free Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --bg-page:    #F2F0EC;
-  --bg-main:    #FFFFFF;
-  --bg-sidebar: #ECEAE5;
-  --bg-surface: #F7F6F3;
-  --bg-hover:   #EDEAE4;
-  --bg-danger:  #FEF2F2;
-  --txt-primary:   #1C1917;
-  --txt-secondary: #57534E;
-  --txt-muted:     #A8A29E;
-  --txt-danger:    #B91C1C;
-  --bdr-light:  rgba(0,0,0,0.08);
-  --bdr-mid:    rgba(0,0,0,0.14);
-  --bdr-strong: rgba(0,0,0,0.24);
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --accent: #2563EB;
-}
+  --bg:#F5F0E8; --s1:#EDE8DE; --s2:#E5DFD4; --s3:#D8D0C4; --s4:#C8BFB0;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.15);
+  --ink:#1A1A1A; --ink2:#3A3A3A; --ink3:#5A5A5A; --ink4:#8A8278;
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); background: var(--bg-page); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px 16px; }
-.tracker { display: flex; min-height: 600px; border: 1px solid var(--bdr-light); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-main); width: 100%; max-width: 880px; box-shadow: 0 4px 32px rgba(0,0,0,0.10); }
-.sidebar { width: 200px; min-width: 200px; background: var(--bg-sidebar); border-right: 1px solid var(--bdr-light); display: flex; flex-direction: column; }
-.sidebar-header { padding: 16px 14px 11px; border-bottom: 1px solid var(--bdr-light); }
-.sidebar-title { font-size: 10px; font-weight: 600; color: var(--txt-muted); letter-spacing: 0.08em; text-transform: uppercase; }
-.app-list { flex: 1; overflow-y: auto; padding: 8px; }
-.app-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: var(--radius-md); cursor: pointer; margin-bottom: 2px; transition: background 0.12s; border: 1px solid transparent; }
-.app-item:hover { background: var(--bg-hover); }
-.app-item.active { background: var(--bg-main); border-color: var(--bdr-mid); }
-.app-emoji { font-size: 16px; flex-shrink: 0; }
-.app-info { flex: 1; min-width: 0; }
-.app-name { font-size: 13px; font-weight: 500; color: var(--txt-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.app-prog { font-size: 11px; color: var(--txt-muted); margin-top: 1px; }
-.del-btn { opacity: 0; font-size: 11px; background: none; border: none; cursor: pointer; padding: 2px 5px; border-radius: 4px; color: var(--txt-muted); flex-shrink: 0; }
-.app-item:hover .del-btn { opacity: 1; }
-.del-btn:hover { background: var(--bg-danger); color: var(--txt-danger); }
-.add-btn { margin: 8px; padding: 9px 12px; background: none; border: 1px dashed var(--bdr-mid); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; color: var(--txt-secondary); font-family: var(--font-sans); transition: all 0.12s; text-align: center; }
-.add-btn:hover { background: var(--bg-main); color: var(--txt-primary); }
-.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 48px; }
-.empty-icon { font-size: 36px; }
-.empty-title { font-size: 16px; font-weight: 600; color: var(--txt-primary); }
-.empty-sub { font-size: 13px; color: var(--txt-secondary); text-align: center; line-height: 1.55; max-width: 240px; }
-.app-header { padding: 18px 22px 0; border-bottom: 1px solid var(--bdr-light); flex-shrink: 0; }
-.app-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.app-big-name { font-size: 17px; font-weight: 600; color: var(--txt-primary); }
-.app-date { font-size: 12px; color: var(--txt-muted); margin-top: 1px; }
-.overall-bar-wrap { margin-bottom: 14px; }
-.overall-label { display: flex; justify-content: space-between; margin-bottom: 7px; }
-.overall-label span:first-child { font-size: 12px; color: var(--txt-secondary); }
-.overall-label span:last-child { font-size: 12px; font-weight: 600; color: var(--txt-primary); }
-.bar-track { height: 6px; background: var(--bdr-light); border-radius: 4px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-.view-tabs { display: flex; }
-.view-tab { padding: 9px 18px; font-size: 13px; font-weight: 500; color: var(--txt-secondary); cursor: pointer; border: none; background: none; font-family: var(--font-sans); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
-.view-tab:hover { color: var(--txt-primary); }
-.view-tab.active { color: var(--txt-primary); border-bottom-color: var(--tab-accent, var(--accent)); }
-.ai-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #16A34A; margin-left: 5px; vertical-align: middle; }
-.phase-tabs { display: flex; overflow-x: auto; flex-shrink: 0; padding: 0 22px; background: var(--bg-surface); border-bottom: 1px solid var(--bdr-light); }
-.phase-tab { padding: 7px 11px; font-size: 11px; font-weight: 600; color: var(--txt-muted); cursor: pointer; border: none; background: none; font-family: var(--font-sans); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; margin-bottom: -1px; letter-spacing: 0.01em; }
-.phase-tab:hover { color: var(--txt-primary); }
-.phase-tab.active { color: var(--txt-primary); border-bottom-color: var(--ph-color); }
-.phase-badge { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 8px; font-size: 9px; font-weight: 700; margin-left: 5px; }
-.content { flex: 1; overflow-y: auto; padding: 18px 22px; }
-.phase-summary { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--bdr-light); margin-bottom: 14px; }
-.phase-summary-text { font-size: 13px; color: var(--txt-secondary); flex: 1; }
-.phase-summary-text strong { color: var(--txt-primary); font-weight: 600; }
-.phase-summary-count { font-size: 12px; font-weight: 600; }
-.phase-section { margin-bottom: 8px; border: 1px solid var(--bdr-light); border-radius: var(--radius-md); overflow: hidden; }
-.section-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-surface); cursor: pointer; user-select: none; transition: background 0.12s; border: none; width: 100%; text-align: left; font-family: var(--font-sans); }
-.section-header:hover { background: var(--bg-hover); }
-.section-title { font-size: 12px; font-weight: 600; color: var(--txt-primary); letter-spacing: 0.01em; flex: 1; }
-.section-meta { font-size: 11px; color: var(--txt-muted); font-weight: 500; }
-.section-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: var(--txt-muted); }
-.section-chevron.open { transform: rotate(90deg); }
-.section-items { border-top: 1px solid var(--bdr-light); overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
-.section-items.open { max-height: 2000px; }
-.check-item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 14px; border-bottom: 1px solid var(--bdr-light); cursor: pointer; transition: background 0.1s; }
-.check-item:last-child { border-bottom: none; }
-.check-item:hover { background: var(--bg-surface); }
-.check-box { width: 17px; height: 17px; min-width: 17px; border-radius: 5px; border: 1.5px solid var(--bdr-mid); background: none; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
-.check-text { font-size: 13.5px; color: var(--txt-primary); line-height: 1.5; flex: 1; }
-.check-text.done { color: var(--txt-muted); text-decoration: line-through; }
-.check-main { display: flex; align-items: flex-start; gap: 11px; flex: 1; min-width: 0; }
-.note-btn { background: none; border: none; cursor: pointer; padding: 3px 6px; border-radius: 5px; color: var(--txt-muted); font-size: 13px; flex-shrink: 0; display: flex; align-items: center; gap: 3px; transition: all 0.12s; font-family: var(--font-sans); margin-top: -1px; }
-.note-btn:hover { background: var(--bg-hover); color: var(--txt-primary); }
-.note-btn.has-note { color: var(--accent); }
-.note-btn.open { background: var(--bg-hover); color: var(--txt-primary); }
-.note-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
-.note-editor { padding: 0 14px 12px 42px; background: var(--bg-surface); border-bottom: 1px solid var(--bdr-light); }
-.note-editor textarea { width: 100%; min-height: 64px; padding: 9px 11px; font-size: 13px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-main); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; resize: vertical; line-height: 1.5; transition: border 0.15s; }
-.note-editor textarea:focus { border-color: var(--accent); }
-.check-item { flex-wrap: wrap; }
-.ai-panel { padding: 18px 22px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.ai-desc { font-size: 13px; color: var(--txt-secondary); line-height: 1.65; padding: 12px 14px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--bdr-light); }
-.ai-generate-area { display: flex; flex-direction: column; gap: 10px; }
-.ai-context-row { display: flex; gap: 10px; align-items: flex-end; }
-.ai-context-col { flex: 1; }
-.ai-context-label { font-size: 11px; color: var(--txt-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
-.ai-context-col input, .ai-context-col select { width: 100%; padding: 8px 11px; font-size: 13px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-surface); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; transition: border 0.15s; }
-.ai-context-col input:focus, .ai-context-col select:focus { border-color: var(--accent); }
-.ai-gen-btn { padding: 9px 18px; background: var(--accent); border: none; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: white; cursor: pointer; font-weight: 600; align-self: flex-start; display: flex; align-items: center; gap: 7px; transition: opacity 0.15s; }
-.ai-gen-btn:hover { opacity: 0.88; }
-.ai-gen-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.ai-results { display: flex; flex-direction: column; gap: 8px; }
-.ai-insight-card { background: var(--bg-surface); border: 1px solid var(--bdr-light); border-radius: var(--radius-md); padding: 13px 15px; }
-.ai-insight-header { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
-.ai-cat-badge { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; letter-spacing: 0.02em; }
-.ai-insight-title { font-size: 13px; font-weight: 600; color: var(--txt-primary); }
-.ai-insight-body { font-size: 13px; color: var(--txt-secondary); line-height: 1.65; }
-.ai-loading { display: flex; align-items: center; gap: 12px; padding: 20px 0; }
-.ai-spinner { width: 16px; height: 16px; border: 2px solid var(--bdr-mid); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; flex-shrink: 0; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.ai-loading-text { font-size: 13px; color: var(--txt-secondary); }
-.ai-error { font-size: 13px; color: var(--txt-danger); padding: 12px 14px; background: var(--bg-danger); border-radius: var(--radius-md); border: 1px solid rgba(185,28,28,0.15); }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 10; }
-.modal { background: var(--bg-main); border: 1px solid var(--bdr-mid); border-radius: var(--radius-lg); padding: 22px; width: 292px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); }
-.modal-title { font-size: 15px; font-weight: 600; color: var(--txt-primary); margin-bottom: 18px; }
-.modal-field { margin-bottom: 14px; }
-.modal-label { font-size: 12px; color: var(--txt-secondary); margin-bottom: 7px; display: block; font-weight: 500; }
-.modal input { width: 100%; padding: 9px 11px; font-size: 14px; font-family: var(--font-sans); color: var(--txt-primary); background: var(--bg-surface); border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); outline: none; transition: border 0.15s; }
-.modal input:focus { border-color: var(--accent); }
-.emoji-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.emoji-opt { width: 34px; height: 34px; font-size: 17px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); border: 1px solid transparent; cursor: pointer; transition: all 0.1s; }
-.emoji-opt:hover { background: var(--bg-surface); }
-.emoji-opt.sel { border-color: var(--accent); background: var(--bg-surface); }
-.modal-actions { display: flex; gap: 9px; margin-top: 18px; }
-.btn-cancel { flex: 1; padding: 9px; background: none; border: 1px solid var(--bdr-mid); border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: var(--txt-secondary); cursor: pointer; font-weight: 500; transition: background 0.12s; }
-.btn-cancel:hover { background: var(--bg-surface); }
-.btn-create { flex: 1; padding: 9px; background: var(--accent); border: none; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); color: white; cursor: pointer; font-weight: 600; transition: opacity 0.12s; }
-.btn-create:hover { opacity: 0.88; }
-.btn-create:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* Per-type accent colors */
+  --c-video:#C41830;    --c-video-dim:rgba(196,24,48,0.08);   --c-video-glo:rgba(196,24,48,0.22);
+  --c-audio:#2D7D46;    --c-audio-dim:rgba(45,125,70,0.08);   --c-audio-glo:rgba(45,125,70,0.22);
+  --c-music:#8B5E1A;    --c-music-dim:rgba(139,94,26,0.08);   --c-music-glo:rgba(139,94,26,0.22);
+  --c-ebook:#2B4E8C;    --c-ebook-dim:rgba(43,78,140,0.08);   --c-ebook-glo:rgba(43,78,140,0.22);
+
+  /* Active accent — updated by JS */
+  --accent:var(--c-video);
+  --accent-dim:var(--c-video-dim);
+  --accent-glo:var(--c-video-glo);
+
+  --c-arch:#4f86c6; --c-tubi:#e8651a; --c-pluto:#7c5cbf;
+  --c-fv:#0097a7; --c-crk:#c49a2e; --c-roku:#5c35b5; --c-plex:#c9900c;
+  --radius:4px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:300;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;
+  padding:.85rem 2.5rem;
+  background:rgba(245,240,232,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-left{display:flex;align-items:center;gap:1.25rem;}
+.nav-left a{font-size:.67rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);text-decoration:none;transition:color .2s;cursor:pointer;}
+.nav-left a:hover{color:var(--accent);}
+.logo{font-family:'Lora',serif;font-size:1.45rem;font-weight:700;letter-spacing:.05em;color:var(--ink);text-align:center;cursor:pointer;font-style:italic;}
+.logo-sub{text-align:center;font-size:.52rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--ink4);margin-top:-1px;}
+.nav-right{display:flex;align-items:center;gap:.75rem;justify-content:flex-end;}
+.search-wrap{position:relative;}
+.search-wrap input{
+  background:transparent;border:none;border-bottom:1.5px solid var(--border2);
+  padding:.4rem .75rem .4rem 1.9rem;color:var(--ink);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;
+  width:195px;outline:none;transition:border-color .2s,width .3s;
+}
+.search-wrap input:focus{border-color:var(--accent);width:255px;}
+.search-wrap input::placeholder{color:var(--ink4);}
+.sico{position:absolute;left:.5rem;top:50%;transform:translateY(-50%);color:var(--ink4);font-size:.78rem;pointer-events:none;}
+.btn-keys{background:transparent;border:1.5px solid var(--border2);color:var(--ink4);padding:.36rem .85rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-keys:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── CONTENT TYPE TAB BAR ── */
+.type-tabs{
+  display:flex;gap:0;
+  background:var(--s1);
+  border-bottom:1px solid var(--border);
+  padding:0 2.5rem;
+}
+.ttab{
+  display:flex;align-items:center;gap:.45rem;
+  padding:.72rem 1.4rem;
+  border:none;background:transparent;
+  color:var(--ink4);font-family:'DM Sans',sans-serif;
+  font-size:.72rem;font-weight:500;letter-spacing:.06em;
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+  white-space:nowrap;
+}
+.ttab-icon{font-size:.95rem;line-height:1;}
+.ttab:hover{color:var(--ink2);}
+.ttab.on{color:var(--ink);font-weight:600;border-bottom-color:var(--accent);}
+.ttab.on[data-type="video"] {color:var(--c-video);border-bottom-color:var(--c-video);}
+.ttab.on[data-type="audio"] {color:var(--c-audio);border-bottom-color:var(--c-audio);}
+.ttab.on[data-type="music"] {color:var(--c-music);border-bottom-color:var(--c-music);}
+.ttab.on[data-type="ebook"] {color:var(--c-ebook);border-bottom-color:var(--c-ebook);}
+
+/* ── CATEGORY BAR ── */
+.cat-bar{
+  display:flex;gap:.3rem;align-items:center;
+  padding:.5rem 2.5rem;overflow-x:auto;scrollbar-width:none;
+  background:var(--bg);border-bottom:1px solid var(--border);
+}
+.cat-bar::-webkit-scrollbar{display:none;}
+.cat-bar-label{font-size:.57rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);flex-shrink:0;margin-right:.35rem;}
+.cpill{padding:.2rem .7rem;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--ink3);font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.cpill:hover{border-color:var(--border2);color:var(--ink);}
+.cpill.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+/* ── HERO ── */
+#hero{
+  position:relative;height:62vh;min-height:420px;max-height:620px;
+  display:grid;grid-template-columns:1fr 1fr;overflow:hidden;
+}
+#hbg{position:absolute;inset:0;right:50%;}
+#hbg img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+#hero::before{content:'';position:absolute;inset:0;right:50%;z-index:1;background:linear-gradient(to right,rgba(245,240,232,.1) 0%,var(--bg) 100%);}
+.hcont{position:relative;z-index:2;grid-column:1;display:flex;flex-direction:column;justify-content:center;padding:3rem 2.5rem;}
+.hright{grid-column:2;position:relative;overflow:hidden;}
+.hright-img{position:absolute;inset:0;}
+.hright-img img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+.hright-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--bg) 0%,transparent 40%);}
+.hbadge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  padding:.2rem .65rem;margin-bottom:.9rem;border:1.5px solid currentColor;
+}
+.htitle{font-family:'Lora',serif;font-size:3rem;font-weight:700;line-height:.97;letter-spacing:-.01em;margin-bottom:.9rem;color:var(--ink);}
+.htitle em{font-style:italic;color:var(--accent);}
+.hmeta{display:flex;gap:.75rem;align-items:center;margin-bottom:.65rem;font-size:.73rem;color:var(--ink4);letter-spacing:.04em;}
+.hmeta .hdiv{color:var(--s4);}
+.hdesc{font-size:.86rem;color:var(--ink3);line-height:1.75;margin-bottom:1.4rem;max-width:400px;font-family:'Lora',serif;font-style:italic;}
+.hero-actions{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;}
+.btn-watch{
+  display:inline-flex;align-items:center;gap:.5rem;
+  color:#fff;border:none;padding:.65rem 1.75rem;border-radius:var(--radius);
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.82rem;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;
+  transition:opacity .2s,transform .15s;
+  background:var(--accent);box-shadow:0 4px 20px var(--accent-glo);
+}
+.btn-watch:hover{opacity:.9;transform:translateY(-1px);}
+.hero-service-badge{font-size:.68rem;color:var(--ink4);letter-spacing:.06em;}
+
+/* ── SECTIONS ── */
+.msection{margin-top:2.5rem;padding:0 2.5rem;}
+.msec-header{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.2rem;}
+.msec-title{font-family:'Lora',serif;font-size:1.05rem;font-weight:700;letter-spacing:.01em;color:var(--ink);}
+.msec-accent{font-style:italic;}
+.msec-rule{flex:1;height:1px;background:var(--border2);}
+.folio-rule{height:1px;background:var(--border2);margin:2.5rem 2.5rem 0;}
+
+/* ── CARD ROW ── */
+.mrow{display:flex;gap:.85rem;overflow-x:auto;padding-bottom:.75rem;scrollbar-width:thin;scrollbar-color:var(--s3) transparent;}
+.mrow::-webkit-scrollbar{height:3px;}
+.mrow::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px;}
+
+/* ── CARD ── */
+.mcard{
+  flex-shrink:0;width:148px;cursor:pointer;border-radius:var(--radius);
+  overflow:hidden;background:var(--s1);border:1px solid var(--border);
+  transition:transform .3s cubic-bezier(.34,1.4,.64,1),box-shadow .3s;position:relative;
+}
+.mcard:hover{transform:scale(1.04) translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.13);z-index:10;}
+.mthumb{width:100%;aspect-ratio:2/3;background:var(--s2);position:relative;overflow:hidden;}
+.mthumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+.mcard:hover .mthumb img{transform:scale(1.05);}
+/* Square thumbs for audio/music/ebook */
+.mcard.sq .mthumb{aspect-ratio:1/1;}
+.mover{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,20,20,.9) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:.6rem;opacity:0;transition:opacity .22s;}
+.mcard:hover .mover{opacity:1;}
+.mover-play{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;margin-bottom:.3rem;background:var(--accent);color:#fff;box-shadow:0 4px 14px var(--accent-glo);}
+.mover-src{font-size:.54rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:.8;}
+.mcard-accent{height:2px;width:100%;}
+.mbody{padding:.55rem .6rem .65rem;}
+.mbody-title{font-family:'Lora',serif;font-size:.78rem;font-weight:600;line-height:1.25;margin-bottom:.28rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--ink);}
+.mbody-sub{font-size:.6rem;color:var(--ink4);margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mbody-meta{display:flex;align-items:center;gap:.3rem;font-size:.58rem;color:var(--ink4);}
+.free-badge{font-size:.5rem;font-weight:700;letter-spacing:.07em;padding:.07rem .3rem;border-radius:2px;border:1px solid currentColor;text-transform:uppercase;margin-left:auto;}
+
+/* ── SKELETON ── */
+.mskel{flex-shrink:0;width:148px;border-radius:var(--radius);overflow:hidden;background:var(--s1);border:1px solid var(--border);}
+.mskel-thumb{width:100%;aspect-ratio:2/3;background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);background-size:200% 100%;animation:sh 1.4s infinite;}
+.mskel.sq .mskel-thumb{aspect-ratio:1/1;}
+.mskel-body{padding:.55rem .6rem;}
+.mskel-line{height:7px;border-radius:2px;background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);background-size:200% 100%;animation:sh 1.4s infinite;margin-bottom:.38rem;}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── GRID VIEW ── */
+#sv{display:none;padding:1.5rem 2.5rem 5rem;}
+#sv.on{display:block;}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(143px,1fr));gap:.9rem;margin-top:1.2rem;}
+.mgrid .mcard{width:100%;}
+.mempty{text-align:center;padding:4rem 1rem;color:var(--ink4);grid-column:1/-1;}
+.mempty-icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.2;}
+.mempty h3{font-family:'Lora',serif;font-size:1.15rem;font-weight:700;margin-bottom:.4rem;color:var(--ink);}
+.mempty p{font-size:.8rem;line-height:1.7;max-width:320px;margin:0 auto;}
+
+/* ── MODAL ── */
+#am{position:fixed;inset:0;z-index:9000;background:rgba(20,16,12,.92);display:flex;align-items:center;justify-content:center;}
+.ami{background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:2.25rem;max-width:500px;width:93%;box-shadow:0 24px 60px rgba(0,0,0,.18);}
+.ami-logo{font-family:'Lora',serif;font-size:1.4rem;font-weight:700;font-style:italic;color:var(--ink);margin-bottom:.1rem;}
+.ami-logo-sub{font-size:.54rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ink4);margin-bottom:1rem;}
+.ami h3{font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.ami p{font-size:.77rem;color:var(--ink3);line-height:1.75;margin-bottom:1.4rem;}
+.arow{display:flex;align-items:center;gap:.65rem;margin-bottom:.75rem;flex-wrap:wrap;}
+.arow label{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-width:80px;flex-shrink:0;color:var(--ink3);}
+.arow input{flex:1;min-width:160px;background:var(--s1);border:1px solid var(--border2);border-radius:var(--radius);padding:.48rem .85rem;color:var(--ink);font-family:monospace;font-size:.77rem;outline:none;transition:border-color .2s;}
+.arow input:focus{border-color:var(--c-video);}
+.arow input::placeholder{color:var(--ink4);}
+.atag{font-size:.58rem;padding:.14rem .42rem;border-radius:2px;font-weight:700;flex-shrink:0;letter-spacing:.05em;}
+.atag-free{background:rgba(45,125,70,.08);color:var(--c-audio);border:1px solid rgba(45,125,70,.2);}
+.atag-opt{background:var(--s2);color:var(--ink4);border:1px solid var(--border);}
+.ami-footer{font-size:.63rem;color:var(--ink4);margin-top:.7rem;line-height:1.7;}
+.ami-actions{display:flex;gap:.6rem;margin-top:1.4rem;flex-wrap:wrap;}
+.btn-launch{background:var(--c-video);color:#fff;border:none;padding:.63rem 1.75rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+.btn-launch:hover{opacity:.9;}
+.btn-skip{background:transparent;color:var(--ink3);border:1px solid var(--border2);padding:.63rem 1.1rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;}
+.btn-skip:hover{color:var(--ink);border-color:var(--ink2);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:1.75rem;right:1.75rem;background:var(--ink);color:var(--bg);padding:.65rem 1.1rem;border-radius:var(--radius);font-size:.77rem;z-index:1000;transform:translateY(70px);opacity:0;transition:all .28s cubic-bezier(.34,1.4,.64,1);}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── FOOTER ── */
+footer{border-top:2px solid var(--ink);margin-top:3rem;padding:2rem 2.5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.footer-logo{font-family:'Lora',serif;font-size:1.05rem;font-weight:700;font-style:italic;color:var(--ink);}
+.footer-sub{font-size:.52rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ink4);}
+.footer-links{font-size:.64rem;color:var(--ink4);margin-top:.3rem;}
+.footer-links a{color:var(--ink4);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--c-video);}
+.footer-copy{font-size:.62rem;color:var(--ink4);margin-top:.25rem;text-align:center;}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script>
-const PHASES = [
-  { id:'prelaunch', phase:'Pre-Launch', days:'Days -30 to 0', color:'#0D9488',
-    sections:[
-      { title:'App Store Preparation', items:[
-        {id:'a1',text:'Finalize app name (30 char max)'},{id:'a2',text:'Write subtitle (30 char max)'},{id:'a3',text:'Write keyword field (100 char max)'},{id:'a4',text:'Write full description (4,000 char max)'},{id:'a5',text:'Write promotional text (170 char max)'},{id:'a6',text:'Design app icon (1024×1024px)'},{id:'a7',text:'Create screenshots for all device sizes'},{id:'a8',text:'Create App Preview video'},{id:'a9',text:'Choose primary & secondary categories'},{id:'a10',text:'Set age rating & content advisories'},{id:'a11',text:'Set pricing & availability (all regions)'},{id:'a12',text:'Create support URL & privacy policy page'},
-      ]},
-      { title:'Social & Community Setup', items:[
-        {id:'b1',text:'Optimize X (Twitter) profile for the app'},{id:'b2',text:'Create TikTok account'},{id:'b3',text:'Set up Instagram account'},{id:'b4',text:'Identify 5+ key subreddits for your audience'},{id:'b5',text:'Build email waitlist with landing page'},{id:'b6',text:'Set up link-in-bio'},
-      ]},
-      { title:'Content Pre-Production', items:[
-        {id:'c1',text:'Create teaser / announcement post'},{id:'c2',text:'Record build-in-public behind-the-scenes content'},{id:'c3',text:'Write launch announcement blog post'},{id:'c4',text:'Produce launch day video (YouTube / TikTok)'},{id:'c5',text:'Design promotional graphics & social assets'},
-      ]},
-      { title:'Press & Outreach', items:[
-        {id:'d1',text:'Write press release'},{id:'d2',text:'Build list: AppAdvice, MacStories, 9to5Mac'},{id:'d3',text:'Identify podcast hosts in your niche'},{id:'d4',text:'Reach out to influencers & early adopters'},
-      ]},
-      { title:'Beta Testing', items:[
-        {id:'e1',text:'Set up TestFlight internal testing'},{id:'e2',text:'Recruit 20+ external beta testers'},{id:'e3',text:'Collect & prioritize beta feedback'},{id:'e4',text:'Fix critical bugs from beta round'},
-      ]},
-    ]
-  },
-  { id:'launch', phase:'Launch Week', days:'Days 1–7', color:'#7C3AED',
-    sections:[
-      { title:'App Store', items:[
-        {id:'f1',text:'Submit app to App Store for review'},{id:'f2',text:'Monitor crash reports in Xcode Organizer'},{id:'f3',text:'Track keyword rankings in App Store Connect'},{id:'f4',text:'Respond to every early App Store review'},
-      ]},
-      { title:'Launch Announcements', items:[
-        {id:'g1',text:'Publish launch post on X / Twitter'},{id:'g2',text:'Post launch reel on TikTok & Instagram'},{id:'g3',text:'Publish launch video on YouTube'},{id:'g4',text:'Email your waitlist'},{id:'g5',text:'Submit & post on Product Hunt'},{id:'g6',text:'Post in all relevant subreddits'},{id:'g7',text:'DM beta testers requesting App Store reviews'},{id:'g8',text:'Send download codes to app review sites'},{id:'g9',text:'Post "Day 1 results" story / update'},
-      ]},
-    ]
-  },
-  { id:'postlaunch', phase:'Post-Launch', days:'Days 8–30', color:'#D97706',
-    sections:[
-      { title:'Analysis', items:[
-        {id:'h1',text:'Analyze Week 1 metrics (downloads, revenue, retention)'},{id:'h2',text:'Analyze keyword performance & iterate'},{id:'h3',text:'Identify top acquisition channels'},
-      ]},
-      { title:'App Store Optimization', items:[
-        {id:'i1',text:'A/B test screenshots in App Store Connect'},{id:'i2',text:'Respond to every App Store review'},{id:'i3',text:'Submit first bug fix / polish update'},
-      ]},
-      { title:'Marketing', items:[
-        {id:'j1',text:'Continue posting 3×/week on all social channels'},{id:'j2',text:'Pitch to relevant podcasts'},{id:'j3',text:'Post "first month results" transparency content'},{id:'j4',text:'Submit to app directories (AppShopper, AlternativeTo)'},{id:'j5',text:'Set up Apple Search Ads basic campaign'},{id:'j6',text:'Pitch to newsletter curators (iOS Dev Weekly, etc.)'},
-      ]},
-    ]
-  },
-  { id:'growth', phase:'Growth', days:'Days 31–60', color:'#16A34A',
-    sections:[
-      { title:'ASO & Product', items:[
-        {id:'k1',text:'Revise ASO metadata based on 30-day data'},{id:'k2',text:'Plan first major feature update from user feedback'},{id:'k3',text:'Set up push notification re-engagement campaign'},
-      ]},
-      { title:'Paid & Partnerships', items:[
-        {id:'l1',text:'Scale Apple Search Ads (optimize bids & keywords)'},{id:'l2',text:'Run a limited-time promotional price or sale'},{id:'l3',text:'Cross-promote with complementary indie apps'},{id:'l4',text:'Apply for App Store featuring via App Store Connect'},
-      ]},
-      { title:'Content & Community', items:[
-        {id:'m1',text:'Create "how to use" tutorial content series'},{id:'m2',text:'Gather power user case studies / testimonials'},{id:'m3',text:'Submit for Apple Design Awards (if eligible)'},{id:'m4',text:'Create SEO comparison / alternative content'},
-      ]},
-    ]
-  },
-  { id:'scale', phase:'Scale', days:'Days 61–90', color:'#DC2626',
-    sections:[
-      { title:'Product & Store', items:[
-        {id:'n1',text:'Launch first major feature update (v1.1+)'},{id:'n2',text:'Follow up on App Store featuring pitch'},{id:'n3',text:'Analyze 90-day cohort (retention, LTV, churn)'},{id:'n4',text:'Build v2 roadmap based on user input'},
-      ]},
-      { title:'Content & Retrospective', items:[
-        {id:'o1',text:'Write 90-day retrospective blog post'},{id:'o2',text:'Create "90-day lessons" YouTube video'},{id:'o3',text:'Submit to additional award programs'},{id:'o4',text:'Document long-term content & growth strategy'},
-      ]},
-    ]
-  }
-];
 
-const ALL_IDS = PHASES.flatMap(p=>p.sections.flatMap(s=>s.items.map(i=>i.id)));
-const TOTAL = ALL_IDS.length;
-const EMOJIS = ['📱','🚀','⭐','🎯','💡','🔥','🌟','💎','🎮','🎵','📸','🌿','🏆','⚡','🎨'];
-const CAT_COLORS = {
-  'ASO':      ['#CCFBF1','#0F766E'], 'Content':  ['#EDE9FE','#6D28D9'],
-  'Community':['#FEF3C7','#92400E'], 'Paid':     ['#DCFCE7','#166534'],
-  'PR':       ['#FEE2E2','#991B1B'], 'Analytics':['#DBEAFE','#1E40AF'],
-  'Strategy': ['#FCE7F3','#9D174D'], 'General':  ['#F3F4F6','#374151']
-};
-
-let state = {
-  apps:[], checks:{}, notes:{}, openNote:null, selectedId:null, activePhase:'prelaunch',
-  activeView:'checklist', showModal:false, newName:'', newEmoji:'📱',
-  aiState:'idle', aiResults:[], aiAppType:'', aiPhaseOverride:'', aiStream:'',
-  collapsed:{}
-};
-
-function loadData() {
-  try {
-    const a=localStorage.getItem('mktr3_apps'), c=localStorage.getItem('mktr3_checks'), col=localStorage.getItem('mktr3_collapsed'), n=localStorage.getItem('mktr3_notes');
-    if(a) state.apps=JSON.parse(a);
-    if(c) state.checks=JSON.parse(c);
-    if(col) state.collapsed=JSON.parse(col);
-    if(n) state.notes=JSON.parse(n);
-  } catch(e) {}
-  render();
-}
-
-function saveData() {
-  try {
-    localStorage.setItem('mktr3_apps',JSON.stringify(state.apps));
-    localStorage.setItem('mktr3_checks',JSON.stringify(state.checks));
-    localStorage.setItem('mktr3_collapsed',JSON.stringify(state.collapsed));
-    localStorage.setItem('mktr3_notes',JSON.stringify(state.notes));
-  } catch(e) {}
-}
-
-function escapeHtml(s) { return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function toggleNote(key) {
-  state.openNote = state.openNote===key ? null : key;
-  render();
-  if(state.openNote===key) {
-    setTimeout(()=>{
-      const ta=document.getElementById('note-ta-'+key);
-      if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); }
-    },30);
-  }
-}
-function updateNote(key,val) {
-  if(val && val.trim()) state.notes[key]=val;
-  else delete state.notes[key];
-  saveData();
-  // update the note-btn indicator without full re-render to preserve focus
-  const btn=document.getElementById('note-btn-'+key);
-  if(btn) {
-    const has=!!state.notes[key];
-    btn.classList.toggle('has-note',has);
-    btn.innerHTML = has ? '<span class="note-dot"></span>Note' : 'Note';
-  }
-}
-
-function getProgress(appId,phaseId) {
-  const phase=PHASES.find(p=>p.id===phaseId); if(!phase) return {checked:0,total:0};
-  const items=phase.sections.flatMap(s=>s.items);
-  return {checked:items.filter(i=>state.checks[appId+'-'+i.id]).length, total:items.length};
-}
-function getTotal(appId) { return {checked:ALL_IDS.filter(id=>state.checks[appId+'-'+id]).length, total:TOTAL}; }
-function pct(n,t) { return t===0?0:Math.round((n/t)*100); }
-
-function colKey(appId,phaseId,sec) { return appId+'|'+phaseId+'|'+sec; }
-function toggleSection(appId,phaseId,sec) { const k=colKey(appId,phaseId,sec); state.collapsed[k]=!state.collapsed[k]; saveData(); render(); }
-function isSectionOpen(appId,phaseId,sec) { return state.collapsed[colKey(appId,phaseId,sec)]!==true; }
-
-async function generateAI() {
-  const app=state.apps.find(a=>a.id===state.selectedId); if(!app) return;
-  state.aiState='loading'; state.aiResults=[]; render();
-  const phaseName=state.aiPhaseOverride||PHASES.find(p=>p.id===state.activePhase)?.phase||'Pre-Launch';
-  const {checked,total}=getTotal(app.id);
-  const prompt=`You are an expert iOS app marketing strategist specializing in indie developer launches.\n\nApp: "${app.name}" (${state.aiAppType||app.name})\nMarketing phase: ${phaseName}\nChecklist progress: ${checked}/${total} tasks completed\n\nGenerate 5 creative, specific, high-impact marketing ideas that an indie iOS developer would NOT typically think of for this phase. Go well beyond standard advice.\n\nRespond ONLY with valid JSON — no markdown, no backticks, no preamble:\n{"insights":[{"title":"...","category":"ASO|Content|Community|Paid|PR|Analytics|Strategy","body":"2-3 sentence specific, actionable tip"}]}`;
-  try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-    const data=await resp.json();
-    if(data.error) throw new Error(data.error.message);
-    const text=data.content?.find(b=>b.type==='text')?.text||'';
-    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-    state.aiResults=parsed.insights||[]; state.aiState='done';
-  } catch(e) { state.aiState='error'; state.aiStream=e.message||'Something went wrong.'; }
-  render();
-}
-
-function chevron(open) {
-  return `<svg class="section-chevron ${open?'open':''}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 3 11 8 6 13"/></svg>`;
-}
-
-function render() {
-  const root=document.getElementById('root');
-  const app=state.apps.find(a=>a.id===state.selectedId);
-  const phase=PHASES.find(p=>p.id===state.activePhase);
-
-  const sidebarItems=state.apps.map(a=>{
-    const {checked,total}=getTotal(a.id);
-    return `<div class="app-item ${a.id===state.selectedId?'active':''}" onclick="selectApp('${a.id}')">
-      <span class="app-emoji">${a.emoji}</span>
-      <div class="app-info"><div class="app-name">${a.name}</div><div class="app-prog">${pct(checked,total)}% complete</div></div>
-      <button class="del-btn" onclick="event.stopPropagation();delApp('${a.id}')">✕</button>
-    </div>`;
-  }).join('')||'<div style="padding:12px 10px;font-size:12px;color:var(--txt-muted)">No apps yet</div>';
-
-  let mainContent='';
-  if(!app) {
-    mainContent=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No app selected</div><div class="empty-sub">Add an app from the sidebar to start tracking your 90-day launch checklist.</div></div>`;
-  } else {
-    const {checked:tc,total:tt}=getTotal(app.id);
-    const barColor=phase?.color||'#2563EB';
-    const isChecklist=state.activeView==='checklist';
-    const {checked:phC,total:phT}=getProgress(app.id,state.activePhase);
-    const phColor=phase?.color||'#2563EB';
-
-    const phaseTabs=PHASES.map(ph=>{
-      const {checked:pc}=getProgress(app.id,ph.id);
-      const phItems=ph.sections.flatMap(s=>s.items).length;
-      const done=pc===phItems;
-      return `<button class="phase-tab ${ph.id===state.activePhase?'active':''}" style="--ph-color:${ph.color}" onclick="setPhase('${ph.id}')">
-        ${ph.phase}<span class="phase-badge" style="background:${done?ph.color+'22':'var(--bdr-light)'};color:${done?ph.color:'var(--txt-muted)'}">${pc}</span>
-      </button>`;
-    }).join('');
-
-    let viewContent='';
-    if(isChecklist) {
-      const sections=phase?.sections.map(sec=>{
-        const open=isSectionOpen(app.id,state.activePhase,sec.title);
-        const secChecked=sec.items.filter(i=>state.checks[app.id+'-'+i.id]).length;
-        const escapedTitle=sec.title.replace(/'/g,"\\'");
-        const items=sec.items.map(item=>{
-          const key=app.id+'-'+item.id; const done=!!state.checks[key];
-          const hasNote=!!state.notes[key]; const noteOpen=state.openNote===key;
-          const noteVal=escapeHtml(state.notes[key]||'');
-          const editor = noteOpen ? `<div class="note-editor" onclick="event.stopPropagation()">
-              <textarea id="note-ta-${key}" placeholder="Add a note for this task…" oninput="updateNote('${key}',this.value)">${noteVal}</textarea>
-            </div>` : '';
-          return `<div class="check-item">
-            <div class="check-main" onclick="toggle('${key}')">
-              <div class="check-box" style="${done?'background:'+phColor+';border-color:'+phColor:''}">
-                ${done?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>':''}
-              </div>
-              <span class="check-text ${done?'done':''}">${item.text}</span>
-            </div>
-            <button id="note-btn-${key}" class="note-btn ${hasNote?'has-note':''} ${noteOpen?'open':''}" onclick="event.stopPropagation();toggleNote('${key}')" title="${hasNote?'Edit note':'Add note'}">${hasNote?'<span class="note-dot"></span>Note':'Note'}</button>
-            ${editor}
-          </div>`;
-        }).join('');
-        return `<div class="phase-section">
-          <button class="section-header" onclick="toggleSection('${app.id}','${state.activePhase}','${escapedTitle}')">
-            ${chevron(open)}<span class="section-title">${sec.title}</span>
-            <span class="section-meta">${secChecked} / ${sec.items.length}</span>
-          </button>
-          <div class="section-items ${open?'open':''}">${items}</div>
-        </div>`;
-      }).join('');
-
-      viewContent=`
-        <div class="phase-tabs">${phaseTabs}</div>
-        <div class="content">
-          <div class="phase-summary">
-            <span class="phase-summary-text"><strong>${phase?.phase||''}</strong> &nbsp;·&nbsp; ${phase?.days||''}</span>
-            <span class="phase-summary-count" style="color:${phColor}">${phC} / ${phT} done</span>
-          </div>
-          ${sections}
-        </div>`;
-    } else {
-      const phaseOptions=PHASES.map(p=>`<option value="${p.phase}" ${state.aiPhaseOverride===p.phase?'selected':''}>${p.phase}</option>`).join('');
-      let resultsHtml='';
-      if(state.aiState==='loading') {
-        resultsHtml=`<div class="ai-loading"><div class="ai-spinner"></div><span class="ai-loading-text">Generating ideas for <strong>${app.name}</strong>…</span></div>`;
-      } else if(state.aiState==='error') {
-        resultsHtml=`<div class="ai-error">Error: ${state.aiStream}</div>`;
-      } else if(state.aiState==='done'&&state.aiResults.length) {
-        resultsHtml=`<div class="ai-results">${state.aiResults.map(ins=>{
-          const [bg,fg]=CAT_COLORS[ins.category]||CAT_COLORS['General'];
-          return `<div class="ai-insight-card"><div class="ai-insight-header"><span class="ai-cat-badge" style="background:${bg};color:${fg}">${ins.category}</span><span class="ai-insight-title">${ins.title}</span></div><div class="ai-insight-body">${ins.body}</div></div>`;
-        }).join('')}</div>`;
-      }
-      viewContent=`
-        <div class="ai-panel">
-          <div class="ai-desc">Describe your app and choose a phase — Claude will surface <strong>5 high-impact ideas</strong> you may not have thought of, tailored to your niche and stage.</div>
-          <div class="ai-generate-area">
-            <div class="ai-context-row">
-              <div class="ai-context-col">
-                <label class="ai-context-label">App type / niche</label>
-                <input type="text" placeholder="e.g. habit tracker, cooking converter…" value="${state.aiAppType}" oninput="state.aiAppType=this.value" />
-              </div>
-              <div class="ai-context-col" style="max-width:138px">
-                <label class="ai-context-label">Phase</label>
-                <select onchange="state.aiPhaseOverride=this.value"><option value="">Current phase</option>${phaseOptions}</select>
-              </div>
-            </div>
-            <button class="ai-gen-btn" onclick="generateAI()" ${state.aiState==='loading'?'disabled':''}>
-              ${state.aiState==='loading'?'<div class="ai-spinner" style="border-top-color:white;width:14px;height:14px;border-width:2px"></div> Generating…':'✦ Generate ideas'}
-            </button>
-          </div>
-          ${resultsHtml}
-        </div>`;
-    }
-
-    mainContent=`
-      <div class="app-header">
-        <div class="app-title-row">
-          <span style="font-size:22px">${app.emoji}</span>
-          <div><div class="app-big-name">${app.name}</div><div class="app-date">Added ${app.createdAt}</div></div>
-        </div>
-        <div class="overall-bar-wrap">
-          <div class="overall-label"><span>Overall progress</span><span>${tc} / ${tt} tasks &nbsp;·&nbsp; ${pct(tc,tt)}%</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${pct(tc,tt)}%;background:${barColor}"></div></div>
-        </div>
-        <div class="view-tabs">
-          <button class="view-tab ${isChecklist?'active':''}" style="--tab-accent:${barColor}" onclick="setView('checklist')">Checklist</button>
-          <button class="view-tab ${!isChecklist?'active':''}" style="--tab-accent:#16A34A" onclick="setView('ai')">AI insights<span class="ai-dot"></span></button>
-        </div>
-      </div>
-      ${viewContent}`;
-  }
-
-  const modal=state.showModal?`<div class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-title">Add new app</div>
-      <div class="modal-field"><label class="modal-label">App name</label><input id="nameInput" type="text" placeholder="e.g. Tethyr, KitchenKit…" value="${state.newName}" oninput="state.newName=this.value" onkeydown="if(event.key==='Enter')createApp()" /></div>
-      <div class="modal-field"><label class="modal-label">Icon</label><div class="emoji-grid">${EMOJIS.map(e=>`<div class="emoji-opt ${e===state.newEmoji?'sel':''}" onclick="setEmoji('${e}')">${e}</div>`).join('')}</div></div>
-      <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-create" onclick="createApp()">Add app</button></div>
+<!-- ── MODAL ── -->
+<div id="am">
+  <div class="ami">
+    <div class="ami-logo">Marquee</div>
+    <div class="ami-logo-sub">The Free Library</div>
+    <h3>Connect Your Sources</h3>
+    <p><strong style="color:var(--ink)">Archive.org, LibriVox, Gutenberg & music collections load instantly — no key required.</strong> Add optional API keys for even more content.</p>
+    <div class="arow">
+      <label style="color:var(--c-audio)">Archive</label>
+      <span style="font-size:.77rem;color:var(--c-audio);font-weight:600;">✅ Video · Audio · Music · Ebooks — always free</span>
+      <span class="atag atag-free">FREE</span>
     </div>
-  </div>`:'';
+    <div class="arow">
+      <label style="color:#e53935">YouTube</label>
+      <input id="ky" type="text" placeholder="AIzaSy… — YouTube Data API v3" onkeydown="if(event.key==='Enter')go()"/>
+      <span class="atag atag-opt">OPTIONAL</span>
+    </div>
+    <div class="arow">
+      <label style="color:#e8651a">TMDB</label>
+      <input id="kt" type="text" placeholder="TMDB API v3 key" onkeydown="if(event.key==='Enter')go()"/>
+      <span class="atag atag-opt">OPTIONAL</span>
+    </div>
+    <p class="ami-footer">TMDB unlocks: Tubi · Pluto TV · Freevee · Crackle · Peacock · Plex · Roku</p>
+    <div class="ami-actions">
+      <button class="btn-launch" onclick="go()">Open the Folio</button>
+      <button class="btn-skip" onclick="go(true)">Skip</button>
+    </div>
+  </div>
+</div>
 
-  root.innerHTML=`<div class="tracker"><div class="sidebar"><div class="sidebar-header"><div class="sidebar-title">My apps</div></div><div class="app-list">${sidebarItems}</div><button class="add-btn" onclick="showModal()">+ Add app</button></div><div class="main">${mainContent}</div>${modal}</div>`;
-  if(state.showModal) setTimeout(()=>{ document.getElementById('nameInput')?.focus(); },50);
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-left">
+    <a onclick="showHome()">Home</a>
+    <a onclick="setCat('',document.querySelector('.cpill[data-cat=\\'\\']'))">Browse</a>
+  </div>
+  <div>
+    <div class="logo" onclick="showHome()">Marquee</div>
+    <div class="logo-sub">The Free Library</div>
+  </div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <span class="sico">⌕</span>
+      <input type="text" id="si" placeholder="Search the collection…"/>
+    </div>
+    <button class="btn-keys" onclick="document.getElementById('am').style.display='flex'">⚙ Sources</button>
+  </div>
+</nav>
+
+<!-- ── CONTENT TYPE TABS ── -->
+<div class="type-tabs">
+  <button class="ttab on" data-type="video" onclick="setType('video',this)">
+    <span class="ttab-icon">🎬</span>Video
+  </button>
+  <button class="ttab" data-type="audio" onclick="setType('audio',this)">
+    <span class="ttab-icon">🎧</span>Audiobooks
+  </button>
+  <button class="ttab" data-type="music" onclick="setType('music',this)">
+    <span class="ttab-icon">🎵</span>Music
+  </button>
+  <button class="ttab" data-type="ebook" onclick="setType('ebook',this)">
+    <span class="ttab-icon">📖</span>Ebooks
+  </button>
+</div>
+
+<!-- ── CATEGORY BAR ── -->
+<div class="cat-bar" id="catbar">
+  <span class="cat-bar-label">Genre</span>
+  <!-- Video genres -->
+  <span class="cat-group" id="cats-video">
+    <button class="cpill on" data-cat="" onclick="setCat('',this)">All</button>
+    <button class="cpill" data-cat="drama"       onclick="setCat('drama',this)">Drama</button>
+    <button class="cpill" data-cat="classic"     onclick="setCat('classic',this)">Classic</button>
+    <button class="cpill" data-cat="documentary" onclick="setCat('documentary',this)">Documentary</button>
+    <button class="cpill" data-cat="thriller"    onclick="setCat('thriller',this)">Thriller</button>
+    <button class="cpill" data-cat="romance"     onclick="setCat('romance',this)">Romance</button>
+    <button class="cpill" data-cat="mystery"     onclick="setCat('mystery',this)">Mystery</button>
+    <button class="cpill" data-cat="sci-fi"      onclick="setCat('sci-fi',this)">Sci-Fi</button>
+    <button class="cpill" data-cat="action"      onclick="setCat('action',this)">Action</button>
+    <button class="cpill" data-cat="comedy"      onclick="setCat('comedy',this)">Comedy</button>
+    <button class="cpill" data-cat="horror"      onclick="setCat('horror',this)">Horror</button>
+    <button class="cpill" data-cat="western"     onclick="setCat('western',this)">Western</button>
+    <button class="cpill" data-cat="adventure"   onclick="setCat('adventure',this)">Adventure</button>
+    <button class="cpill" data-cat="family"      onclick="setCat('family',this)">Family</button>
+  </span>
+  <!-- Audio genres -->
+  <span class="cat-group" id="cats-audio" style="display:none">
+    <button class="cpill on" data-cat="" onclick="setCat('',this)">All</button>
+    <button class="cpill" data-cat="fiction"     onclick="setCat('fiction',this)">Fiction</button>
+    <button class="cpill" data-cat="classic"     onclick="setCat('classic',this)">Classic Lit</button>
+    <button class="cpill" data-cat="mystery"     onclick="setCat('mystery',this)">Mystery</button>
+    <button class="cpill" data-cat="romance"     onclick="setCat('romance',this)">Romance</button>
+    <button class="cpill" data-cat="sci-fi"      onclick="setCat('sci-fi',this)">Sci-Fi</button>
+    <button class="cpill" data-cat="biography"   onclick="setCat('biography',this)">Biography</button>
+    <button class="cpill" data-cat="history"     onclick="setCat('history',this)">History</button>
+    <button class="cpill" data-cat="adventure"   onclick="setCat('adventure',this)">Adventure</button>
+    <button class="cpill" data-cat="horror"      onclick="setCat('horror',this)">Horror</button>
+    <button class="cpill" data-cat="poetry"      onclick="setCat('poetry',this)">Poetry</button>
+  </span>
+  <!-- Music genres -->
+  <span class="cat-group" id="cats-music" style="display:none">
+    <button class="cpill on" data-cat="" onclick="setCat('',this)">All</button>
+    <button class="cpill" data-cat="jazz"        onclick="setCat('jazz',this)">Jazz</button>
+    <button class="cpill" data-cat="blues"       onclick="setCat('blues',this)">Blues</button>
+    <button class="cpill" data-cat="classical"   onclick="setCat('classical',this)">Classical</button>
+    <button class="cpill" data-cat="folk"        onclick="setCat('folk',this)">Folk</button>
+    <button class="cpill" data-cat="rock"        onclick="setCat('rock',this)">Rock</button>
+    <button class="cpill" data-cat="electronic"  onclick="setCat('electronic',this)">Electronic</button>
+    <button class="cpill" data-cat="ambient"     onclick="setCat('ambient',this)">Ambient</button>
+    <button class="cpill" data-cat="country"     onclick="setCat('country',this)">Country</button>
+  </span>
+  <!-- Ebook genres -->
+  <span class="cat-group" id="cats-ebook" style="display:none">
+    <button class="cpill on" data-cat="" onclick="setCat('',this)">All</button>
+    <button class="cpill" data-cat="fiction"     onclick="setCat('fiction',this)">Fiction</button>
+    <button class="cpill" data-cat="classic"     onclick="setCat('classic',this)">Classics</button>
+    <button class="cpill" data-cat="mystery"     onclick="setCat('mystery',this)">Mystery</button>
+    <button class="cpill" data-cat="romance"     onclick="setCat('romance',this)">Romance</button>
+    <button class="cpill" data-cat="sci-fi"      onclick="setCat('sci-fi',this)">Sci-Fi</button>
+    <button class="cpill" data-cat="adventure"   onclick="setCat('adventure',this)">Adventure</button>
+    <button class="cpill" data-cat="biography"   onclick="setCat('biography',this)">Biography</button>
+    <button class="cpill" data-cat="history"     onclick="setCat('history',this)">History</button>
+    <button class="cpill" data-cat="philosophy"  onclick="setCat('philosophy',this)">Philosophy</button>
+    <button class="cpill" data-cat="poetry"      onclick="setCat('poetry',this)">Poetry</button>
+    <button class="cpill" data-cat="children"    onclick="setCat('children',this)">Children</button>
+  </span>
+</div>
+
+<!-- ── HERO ── -->
+<div id="hero">
+  <div id="hbg"><img id="himg" src="" alt=""/></div>
+  <div class="hcont">
+    <div class="hbadge" id="hbadge">Featured</div>
+    <div class="htitle" id="htitle">Free Cinema,<br><em>Elevated.</em></div>
+    <div class="hmeta"><span id="hchan">Internet Archive</span><span class="hdiv">·</span><span id="hyr"></span></div>
+    <p class="hdesc" id="hdesc">Thousands of films, audiobooks, music, and ebooks — curated from the world's greatest open archives.</p>
+    <div class="hero-actions">
+      <a id="hbtn" href="#" target="_blank" rel="noopener" class="btn-watch">▶ Watch Now</a>
+      <span class="hero-service-badge" id="hservice"></span>
+    </div>
+  </div>
+  <div class="hright"><div class="hright-img"><img id="himg2" src="" alt=""/></div></div>
+</div>
+
+<!-- ── HOME CONTENT ── -->
+<main id="hv">
+
+  <!-- VIDEO -->
+  <div id="section-video">
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Internet Archive — <span class="msec-accent" style="color:var(--c-video)">Public Domain Films</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="ra"></div>
+    </div>
+    <div class="folio-rule"></div>
+    <div class="msection" id="syt" style="display:none">
+      <div class="msec-header">
+        <div class="msec-title">YouTube — <span class="msec-accent" style="color:var(--c-video)">Official Free Films</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="ryt"></div>
+    </div>
+    <div class="msection" id="stmdb" style="display:none">
+      <div class="msec-header">
+        <div class="msec-title">Tubi · Pluto · Freevee — <span class="msec-accent" style="color:var(--c-video)">Trending Free</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rtmdb"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Classic Cinema — <span class="msec-accent" style="color:var(--c-video)">1920s–1950s</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rcls"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title"><span class="msec-accent" style="color:var(--c-video)">Documentaries</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rdoc"></div>
+    </div>
+  </div>
+
+  <!-- AUDIOBOOKS -->
+  <div id="section-audio" style="display:none">
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">LibriVox — <span class="msec-accent" style="color:var(--c-audio)">Free Audiobooks</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="raud"></div>
+    </div>
+    <div class="folio-rule"></div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Classic Literature — <span class="msec-accent" style="color:var(--c-audio)">Timeless Voices</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rlit"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title"><span class="msec-accent" style="color:var(--c-audio)">Nonfiction & History</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rnf"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Open Library — <span class="msec-accent" style="color:var(--c-audio)">Poetry & Drama</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rpoetry"></div>
+    </div>
+  </div>
+
+  <!-- MUSIC -->
+  <div id="section-music" style="display:none">
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Live Concerts — <span class="msec-accent" style="color:var(--c-music)">Etree Collection</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rmusic-live"></div>
+    </div>
+    <div class="folio-rule"></div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Historical Recordings — <span class="msec-accent" style="color:var(--c-music)">1920s–1940s Jazz & Classical</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rmusic-hist"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Independent Labels — <span class="msec-accent" style="color:var(--c-music)">Creative Commons</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rmusic-indie"></div>
+    </div>
+  </div>
+
+  <!-- EBOOKS -->
+  <div id="section-ebook" style="display:none">
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Project Gutenberg — <span class="msec-accent" style="color:var(--c-ebook)">60,000 Free Books</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rebook-main"></div>
+    </div>
+    <div class="folio-rule"></div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title">Classic Fiction — <span class="msec-accent" style="color:var(--c-ebook)">The Canon</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rebook-fiction"></div>
+    </div>
+    <div class="msection">
+      <div class="msec-header">
+        <div class="msec-title"><span class="msec-accent" style="color:var(--c-ebook)">Philosophy, History & Science</span></div>
+        <div class="msec-rule"></div>
+      </div>
+      <div class="mrow" id="rebook-nf"></div>
+    </div>
+  </div>
+
+  <div style="height:3rem"></div>
+</main>
+
+<!-- SEARCH/CATEGORY RESULTS -->
+<div id="sv">
+  <div class="msec-header" style="padding:0">
+    <div class="msec-title" id="slbl" style="font-size:1.1rem">Results</div>
+    <div class="msec-rule"></div>
+  </div>
+  <div class="mgrid" id="sgrid"></div>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+  <div class="footer-logo">Marquee</div>
+  <div class="footer-sub">The Free Library</div>
+  <div class="footer-links">
+    <a href="https://archive.org" target="_blank">Internet Archive</a> &nbsp;·&nbsp;
+    <a href="https://librivox.org" target="_blank">LibriVox</a> &nbsp;·&nbsp;
+    <a href="https://gutenberg.org" target="_blank">Project Gutenberg</a> &nbsp;·&nbsp;
+    <a href="https://etree.org" target="_blank">Etree</a> &nbsp;·&nbsp;
+    <a href="https://youtube.com" target="_blank">YouTube</a> &nbsp;·&nbsp;
+    <a href="https://themoviedb.org" target="_blank">TMDB</a>
+  </div>
+  <div class="footer-copy">Designed by Jeanese Latiolais · appsbyai &nbsp;·&nbsp; Marquee does not host media. Free &amp; legal.</div>
+</footer>
+
+<script>
+// ── DATA MAPS ───────────────────────────────────────────
+const TYPE_ACCENT = {
+  video: {main:'#C41830', dim:'rgba(196,24,48,0.08)', glo:'rgba(196,24,48,0.22)'},
+  audio: {main:'#2D7D46', dim:'rgba(45,125,70,0.08)',  glo:'rgba(45,125,70,0.22)'},
+  music: {main:'#8B5E1A', dim:'rgba(139,94,26,0.08)',  glo:'rgba(139,94,26,0.22)'},
+  ebook: {main:'#2B4E8C', dim:'rgba(43,78,140,0.08)',  glo:'rgba(43,78,140,0.22)'},
+};
+const TYPE_ICON   = {video:'🎬',audio:'🎧',music:'🎵',ebook:'📖'};
+const TYPE_CTA    = {video:'▶ Watch Now',audio:'🎧 Listen Now',music:'🎵 Play Now',ebook:'📖 Read Now'};
+const TYPE_BADGE  = {video:'Film',audio:'Audiobook',music:'Music',ebook:'Ebook'};
+
+const SMETA = {
+  archive:{label:'Internet Archive',color:'#4f86c6'},
+  librivox:{label:'LibriVox',color:'#2D7D46'},
+  openlib:{label:'Open Library',color:'#6b7c93'},
+  etree:{label:'Live Concert',color:'#8B5E1A'},
+  georgeblood:{label:'Historical',color:'#8B5E1A'},
+  netlabels:{label:'Indie Label',color:'#8B5E1A'},
+  gutenberg:{label:'Gutenberg',color:'#2B4E8C'},
+  youtube:{label:'YouTube',color:'#e53935'},
+  tubi:{label:'Tubi',color:'#e8651a'},pluto:{label:'Pluto TV',color:'#7c5cbf'},
+  freevee:{label:'Freevee',color:'#0097a7'},crackle:{label:'Crackle',color:'#c49a2e'},
+  roku:{label:'Roku',color:'#5c35b5'},plex:{label:'Plex',color:'#c9900c'},
+};
+const FREE_P={73:'Tubi',300:'Pluto TV',10:'Amazon Freevee',117:'Crackle',207:'Roku Channel',538:'Plex',386:'Peacock Free'};
+const TMDB_GENRES={'action':28,'comedy':35,'horror':27,'thriller':53,'drama':18,'sci-fi':878,'romance':10749,'western':37,'documentary':99,'animation':16,'mystery':9648,'war':10752,'family':10751,'crime':80,'adventure':12};
+
+const FILM_GENRE_Q = {
+  'drama':'drama film','classic':'classic film noir 1940 1950','documentary':'documentary film',
+  'thriller':'thriller mystery film','romance':'romance film','mystery':'mystery detective film',
+  'sci-fi':'science fiction film','action':'action adventure film','comedy':'comedy film',
+  'horror':'horror film','western':'western film','adventure':'adventure film','family':'family film',
+};
+const AUDIO_GENRE_Q = {
+  'fiction':'fiction novel','classic':'classic literature','mystery':'mystery detective',
+  'romance':'romance love story','sci-fi':'science fiction','biography':'biography memoir',
+  'history':'history historical','adventure':'adventure','horror':'horror gothic',
+  'poetry':'poetry verse',
+};
+const MUSIC_GENRE_Q = {
+  'jazz':'jazz','blues':'blues','classical':'classical','folk':'folk',
+  'rock':'rock','electronic':'electronic','ambient':'ambient','country':'country',
+};
+const EBOOK_GENRE_Q = {
+  'fiction':'fiction','classic':'classic literature','mystery':'mystery detective',
+  'romance':'romance','sci-fi':'science fiction','adventure':'adventure',
+  'biography':'biography memoir','history':'history','philosophy':'philosophy',
+  'poetry':'poetry','children':'children stories',
+};
+
+const P_COLOR={73:'#e8651a',300:'#7c5cbf',10:'#0097a7',117:'#c49a2e',207:'#5c35b5',538:'#c9900c',386:'#0097a7'};
+const P_LINK={73:t=>`https://tubitv.com/search?q=${enc(t)}`,300:t=>`https://pluto.tv/search?q=${enc(t)}`,10:t=>`https://www.amazon.com/s?k=${enc(t)}&i=instant-video&rh=n%3A2858778011`,117:t=>`https://www.crackle.com/search/${enc(t)}`,207:t=>`https://therokuchannel.roku.com/search?q=${enc(t)}`,538:t=>`https://app.plex.tv/desktop/#!/search?query=${enc(t)}`,386:t=>`https://www.peacocktv.com/watch/search?q=${enc(t)}`};
+
+// ── STATE ───────────────────────────────────────────────
+let K={yt:'',tmdb:''};
+let curType='video';
+let curCat='';
+const loaded={video:false,audio:false,music:false,ebook:false};
+
+try{K.yt=localStorage.getItem('mq_yt')||'';K.tmdb=localStorage.getItem('mq_tmdb')||'';}catch(e){}
+if(K.yt||K.tmdb){
+  document.getElementById('ky').value=K.yt;
+  document.getElementById('kt').value=K.tmdb;
+  document.getElementById('am').style.display='none';
+  init();
 }
 
-function selectApp(id) { state.selectedId=id; state.activePhase='prelaunch'; state.activeView='checklist'; state.aiState='idle'; state.aiResults=[]; render(); }
-function setPhase(id) { state.activePhase=id; render(); }
-function setView(v) { state.activeView=v; render(); }
-function toggle(key) { state.checks[key]=!state.checks[key]; saveData(); render(); }
-function showModal() { state.showModal=true; state.newName=''; state.newEmoji='📱'; render(); }
-function closeModal(e) { if(!e||e.target.classList.contains('modal-overlay')){ state.showModal=false; render(); } }
-function setEmoji(e) { state.newEmoji=e; render(); }
-function createApp() {
-  if(!state.newName.trim()) return;
-  const a={id:Date.now().toString(),name:state.newName.trim(),emoji:state.newEmoji,createdAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
-  state.apps.push(a); state.selectedId=a.id; state.activePhase='prelaunch'; state.activeView='checklist'; state.showModal=false; saveData(); render();
+function go(skip){
+  if(!skip){K.yt=document.getElementById('ky').value.trim();K.tmdb=document.getElementById('kt').value.trim();}
+  try{localStorage.setItem('mq_yt',K.yt);localStorage.setItem('mq_tmdb',K.tmdb);}catch(e){}
+  document.getElementById('am').style.display='none';
+  init();
 }
-function delApp(id) {
-  state.apps=state.apps.filter(a=>a.id!==id);
-  Object.keys(state.checks).forEach(k=>{ if(k.startsWith(id+'-')) delete state.checks[k]; });
-  if(state.selectedId===id) state.selectedId=state.apps[0]?.id||null;
-  saveData(); render();
+function init(){
+  if(K.yt)document.getElementById('syt').style.display='block';
+  if(K.tmdb)document.getElementById('stmdb').style.display='block';
+  setAccent('video');
+  loadVideo();
+  setupSearch();
 }
 
-loadData();
+// ── ACCENT ──────────────────────────────────────────────
+function setAccent(type){
+  const a=TYPE_ACCENT[type];
+  const r=document.documentElement.style;
+  r.setProperty('--accent',a.main);
+  r.setProperty('--accent-dim',a.dim);
+  r.setProperty('--accent-glo',a.glo);
+  // Update play button colors in future-rendered cards via CSS var
+  document.documentElement.style.setProperty('--cur-accent',a.main);
+}
+
+// ── TAB SWITCH ──────────────────────────────────────────
+function setType(type,el){
+  document.querySelectorAll('.ttab').forEach(t=>t.classList.remove('on'));
+  if(el)el.classList.add('on');
+  curType=type;
+  curCat='';
+  setAccent(type);
+
+  // Swap category groups
+  ['video','audio','music','ebook'].forEach(t=>{
+    const cg=document.getElementById(`cats-${t}`);
+    if(cg)cg.style.display=t===type?'':'none';
+  });
+  // Reset pills in active group
+  document.querySelectorAll(`#cats-${type} .cpill`).forEach(p=>p.classList.remove('on'));
+  const first=document.querySelector(`#cats-${type} .cpill[data-cat=""]`);
+  if(first)first.classList.add('on');
+
+  // Swap content sections
+  ['video','audio','music','ebook'].forEach(t=>{
+    const s=document.getElementById(`section-${t}`);
+    if(s)s.style.display=t===type?'block':'none';
+  });
+
+  // Lazy load
+  if(!loaded[type]){
+    loaded[type]=true;
+    if(type==='video')loadVideo();
+    else if(type==='audio')loadAudio();
+    else if(type==='music')loadMusic();
+    else if(type==='ebook')loadEbook();
+  }
+
+  const q=document.getElementById('si').value.trim();
+  if(q)doSearch(q);else showHome();
+}
+
+// ── LOADERS ─────────────────────────────────────────────
+async function loadVideo(){
+  skels('ra',8);skels('rcls',8);skels('rdoc',8);
+  if(K.yt)skels('ryt',8);
+  if(K.tmdb)skels('rtmdb',8);
+  const[main,classics,docs]=await Promise.all([
+    archSearch('mediatype:movies','feature film',10),
+    archSearch('mediatype:movies','classic film noir western 1930 1940 1950',8),
+    archSearch('mediatype:movies','documentary educational film',8),
+  ]);
+  renderRow('ra',main);renderRow('rcls',classics);renderRow('rdoc',docs);
+  if(main.length)setHero(main[0]);
+  if(K.yt)ytSearch('full movie free official',8).then(r=>renderRow('ryt',r));
+  if(K.tmdb)tmdbTrending().then(r=>renderRow('rtmdb',r));
+}
+
+async function loadAudio(){
+  skels('raud',8,true);skels('rlit',8,true);skels('rnf',8,true);skels('rpoetry',8,true);
+  const[gen,lit,nf,poetry]=await Promise.all([
+    librivoxSearch('fiction novel',10),
+    librivoxSearch('classic literature',8),
+    librivoxSearch('history biography',8),
+    openLibSearch('poetry drama',8),
+  ]);
+  renderRow('raud',gen);renderRow('rlit',lit);renderRow('rnf',nf);renderRow('rpoetry',poetry);
+  if(gen.length)setHero(gen[0]);
+}
+
+async function loadMusic(){
+  skels('rmusic-live',8,true);skels('rmusic-hist',8,true);skels('rmusic-indie',8,true);
+  const[live,hist,indie]=await Promise.all([
+    musicSearch('etree','',10),
+    musicSearch('georgeblood','jazz blues',8),
+    musicSearch('netlabels','',8),
+  ]);
+  renderRow('rmusic-live',live);renderRow('rmusic-hist',hist);renderRow('rmusic-indie',indie);
+  if(live.length)setHero(live[0]);
+}
+
+async function loadEbook(){
+  skels('rebook-main',8,true);skels('rebook-fiction',8,true);skels('rebook-nf',8,true);
+  const[main,fiction,nf]=await Promise.all([
+    gutenbergSearch('',10),
+    gutenbergSearch('fiction novel',8),
+    gutenbergSearch('philosophy history science',8),
+  ]);
+  renderRow('rebook-main',main);renderRow('rebook-fiction',fiction);renderRow('rebook-nf',nf);
+  if(main.length)setHero(main[0]);
+}
+
+// ── ARCHIVE SEARCH ──────────────────────────────────────
+async function archSearch(mediatype, q, rows=10, extraSrc){
+  try{
+    const p=new URLSearchParams({
+      q:`${mediatype} AND (subject:(${q}) OR title:(${q})) AND -subject:spam`,
+      fl:'identifier,title,description,year,creator',rows,output:'json',sort:'downloads desc'
+    });
+    const r=await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d=await r.json();
+    const mtype=mediatype.includes('movies')?'video':mediatype.includes('audio')?'audio':'video';
+    return(d.response?.docs||[]).map(i=>({
+      id:i.identifier,title:i.title||i.identifier,
+      channel:Array.isArray(i.creator)?i.creator[0]:(i.creator||'Internet Archive'),
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:extraSrc||'archive',mediaType:mtype
+    }));
+  }catch(e){return[];}
+}
+
+// LibriVox — dedicated collection on Archive.org
+async function librivoxSearch(q,rows=10){
+  try{
+    const p=new URLSearchParams({
+      q:`collection:librivoxaudio AND (subject:(${q}) OR title:(${q}))`,
+      fl:'identifier,title,description,year,creator',rows,output:'json',sort:'downloads desc'
+    });
+    const r=await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d=await r.json();
+    return(d.response?.docs||[]).map(i=>({
+      id:i.identifier,title:i.title||i.identifier,
+      channel:Array.isArray(i.creator)?i.creator[0]:(i.creator||'LibriVox'),
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:'librivox',mediaType:'audio'
+    }));
+  }catch(e){return[];}
+}
+
+// Open Library audio_bookspoetry collection
+async function openLibSearch(q,rows=8){
+  try{
+    const clause=q?` AND (subject:(${q}) OR title:(${q}))`:'';
+    const p=new URLSearchParams({
+      q:`collection:audio_bookspoetry${clause} AND -subject:spam`,
+      fl:'identifier,title,description,year,creator',rows,output:'json',sort:'downloads desc'
+    });
+    const r=await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d=await r.json();
+    return(d.response?.docs||[]).map(i=>({
+      id:i.identifier,title:i.title||i.identifier,
+      channel:Array.isArray(i.creator)?i.creator[0]:(i.creator||'Open Library'),
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:'openlib',mediaType:'audio'
+    }));
+  }catch(e){return[];}
+}
+
+// Music collections:
+//  etree      — taper-permitted live concerts (Grateful Dead, Phish, etc.)
+//  georgeblood — historical 78rpm digitizations (jazz, classical, blues, 1900s–1950s)
+//  netlabels   — Creative Commons indie labels
+async function musicSearch(collection,q,rows=10){
+  try{
+    const clause=q?` AND (subject:(${q}) OR title:(${q}))`:'';
+    const p=new URLSearchParams({
+      q:`collection:${collection}${clause} AND -subject:spam`,
+      fl:'identifier,title,description,year,creator',rows,output:'json',sort:'downloads desc'
+    });
+    const r=await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d=await r.json();
+    return(d.response?.docs||[]).map(i=>({
+      id:i.identifier,title:i.title||i.identifier,
+      channel:Array.isArray(i.creator)?i.creator[0]:(i.creator||'Archive.org'),
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:collection,mediaType:'music'
+    }));
+  }catch(e){return[];}
+}
+
+// Project Gutenberg mirror on Archive.org
+async function gutenbergSearch(q,rows=10){
+  try{
+    const clause=q?` AND (subject:(${q}) OR title:(${q}))`:'';
+    const p=new URLSearchParams({
+      q:`collection:gutenberg${clause} AND -subject:spam AND mediatype:texts`,
+      fl:'identifier,title,description,year,creator',rows,output:'json',sort:'downloads desc'
+    });
+    const r=await fetch(`https://archive.org/advancedsearch.php?${p}`);
+    const d=await r.json();
+    return(d.response?.docs||[]).map(i=>({
+      id:i.identifier,title:i.title||i.identifier,
+      channel:Array.isArray(i.creator)?i.creator[0]:(i.creator||'Gutenberg'),
+      thumb:`https://archive.org/services/img/${i.identifier}`,
+      year:i.year||'',
+      desc:Array.isArray(i.description)?i.description[0]:(i.description||''),
+      url:`https://archive.org/details/${i.identifier}`,
+      src:'gutenberg',mediaType:'ebook'
+    }));
+  }catch(e){return[];}
+}
+
+// YouTube
+async function ytSearch(q,n=10){
+  if(!K.yt)return[];
+  try{
+    const p=new URLSearchParams({part:'snippet',q,type:'video',videoEmbeddable:'true',maxResults:n,key:K.yt});
+    const r=await fetch(`https://www.googleapis.com/youtube/v3/search?${p}`);
+    const d=await r.json();
+    if(d.error){toast('⚠️ YouTube: '+d.error.message.slice(0,55));return[];}
+    return(d.items||[]).filter(i=>i.id?.videoId).map(i=>({
+      id:i.id.videoId,title:dh(i.snippet.title),channel:i.snippet.channelTitle,
+      thumb:i.snippet.thumbnails?.high?.url||'',year:(i.snippet.publishedAt||'').slice(0,4),
+      desc:dh(i.snippet.description||''),url:`https://www.youtube.com/watch?v=${i.id.videoId}`,
+      src:'youtube',mediaType:'video'
+    }));
+  }catch(e){return[];}
+}
+
+// TMDB
+async function tmdbTrending(){
+  if(!K.tmdb)return[];
+  try{
+    const r=await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${K.tmdb}`);
+    const d=await r.json();
+    if(d.status_message){toast('⚠️ TMDB: '+d.status_message.slice(0,55));return[];}
+    const res=await Promise.all((d.results||[]).slice(0,12).map(m=>tmdbProviders(m,'movie')));
+    return res.filter(Boolean);
+  }catch(e){return[];}
+}
+async function tmdbProviders(item,type){
+  try{
+    const r=await fetch(`https://api.themoviedb.org/3/${type}/${item.id}/watch/providers?api_key=${K.tmdb}`);
+    const d=await r.json();
+    const us=d.results?.US;
+    const free=[...(us?.free||[]),...(us?.flatrate||[])].filter(p=>FREE_P[p.provider_id]);
+    if(!free.length)return null;
+    const prov=free[0];const pid=prov.provider_id;const title=item.title||item.name||'';
+    return{id:String(item.id),title,channel:FREE_P[pid]||'Free',
+      thumb:item.poster_path?`https://image.tmdb.org/t/p/w500${item.poster_path}`:'',
+      year:(item.release_date||item.first_air_date||'').slice(0,4),desc:item.overview||'',
+      url:P_LINK[pid]?P_LINK[pid](title):'#',src:'tubi',provider:pid,mediaType:'video'};
+  }catch(e){return null;}
+}
+async function tmdbByGenre(genreId){
+  if(!K.tmdb)return[];
+  try{
+    const p=new URLSearchParams({api_key:K.tmdb,with_genres:genreId,with_watch_monetization_types:'free',watch_region:'US',sort_by:'popularity.desc',page:1});
+    const r=await fetch(`https://api.themoviedb.org/3/discover/movie?${p}`);
+    const d=await r.json();
+    if(d.status_message)return[];
+    const res=await Promise.all((d.results||[]).slice(0,14).map(m=>tmdbProviders(m,'movie')));
+    return res.filter(Boolean);
+  }catch(e){return[];}
+}
+async function tmdbSearch(q){
+  if(!K.tmdb)return[];
+  try{
+    const r=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${K.tmdb}&query=${enc(q)}&include_adult=false`);
+    const d=await r.json();
+    const items=(d.results||[]).filter(x=>x.media_type==='movie'||x.media_type==='tv').slice(0,14);
+    const res=await Promise.all(items.map(m=>tmdbProviders(m,m.media_type)));
+    return res.filter(Boolean);
+  }catch(e){return[];}
+}
+
+// ── RENDER ──────────────────────────────────────────────
+function renderRow(id,items){
+  const el=document.getElementById(id);if(!el)return;
+  if(!items.length){
+    el.innerHTML=`<div style="padding:2rem .5rem;color:var(--ink4);font-size:.78rem;font-family:'Lora',serif;font-style:italic">No content found.</div>`;
+    return;
+  }
+  el.innerHTML=items.map(x=>card(x)).join('');
+}
+
+function card(x){
+  const mt=x.mediaType||'video';
+  const a=TYPE_ACCENT[mt]||TYPE_ACCENT.video;
+  const sq=mt!=='video'; // square thumbs for audio/music/ebook
+  const s=x.src||'archive';
+  const pid=x.provider;
+  const color=s==='tubi'&&pid?(P_COLOR[pid]||a.main):(SMETA[s]?.color||a.main);
+  const label=s==='tubi'&&pid?(FREE_P[pid]||'Free'):(SMETA[s]?.label||s);
+  const icon=TYPE_ICON[mt]||'▶';
+  const ctaLabel=mt==='video'?'Free':mt==='audio'?'Listen':mt==='music'?'Play':'Read';
+  const url=ej(x.url||'#');
+  return`<div class="mcard${sq?' sq':''}" onclick="window.open('${url}','_blank')"
+    style="--card-accent:${a.main};--card-glo:${a.glo}">
+    <div class="mcard-accent" style="background:${a.main}"></div>
+    <div class="mthumb">
+      <img src="${x.thumb||''}" alt="${eh(x.title)}" loading="lazy" onerror="this.style.display='none'"/>
+      <div class="mover">
+        <div class="mover-play" style="background:${a.main};box-shadow:0 4px 14px ${a.glo}">${icon}</div>
+        <div class="mover-src">${eh(label)}</div>
+      </div>
+    </div>
+    <div class="mbody">
+      <div class="mbody-title">${eh(x.title)}</div>
+      ${x.channel&&x.channel!=='Internet Archive'?`<div class="mbody-sub">${eh(x.channel)}</div>`:''}
+      <div class="mbody-meta">
+        <span>${x.year||''}</span>
+        <span class="free-badge" style="color:${a.main}">${ctaLabel}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function skels(id,n,sq){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=Array(n).fill(0).map(()=>`<div class="mskel${sq?' sq':''}"><div class="mskel-thumb"></div><div class="mskel-body"><div class="mskel-line" style="width:75%;height:7px"></div><div class="mskel-line" style="width:45%"></div></div></div>`).join('');
+}
+
+// ── HERO ────────────────────────────────────────────────
+function setHero(x){
+  const mt=x.mediaType||'video';
+  const a=TYPE_ACCENT[mt]||TYPE_ACCENT.video;
+  const badge=document.getElementById('hbadge');
+  badge.textContent=TYPE_BADGE[mt]||'Featured';
+  badge.style.cssText=`color:${a.main};border-color:${a.main};`;
+  const parts=x.title.split(':');
+  document.getElementById('htitle').innerHTML=`${eh(parts[0])}${parts[1]?'<br><em>'+eh(parts[1])+'</em>':''}`;
+  if(!x.title.includes(':'))document.getElementById('htitle').textContent=x.title;
+  document.getElementById('hchan').textContent=x.channel;
+  document.getElementById('hyr').textContent=x.year||'';
+  const raw=Array.isArray(x.desc)?x.desc[0]:(x.desc||'');
+  document.getElementById('hdesc').textContent=raw.slice(0,165)+(raw.length>165?'…':'')||'';
+  document.getElementById('himg').src=x.thumb||'';
+  const hi2=document.getElementById('himg2');if(hi2)hi2.src=x.thumb||'';
+  const btn=document.getElementById('hbtn');
+  btn.href=x.url||'#';
+  btn.textContent=TYPE_CTA[mt]||'▶ Open';
+  btn.style.background=a.main;
+  btn.style.boxShadow=`0 4px 20px ${a.glo}`;
+  document.getElementById('hservice').textContent=x.channel?'· '+x.channel:'';
+}
+
+// ── CATEGORIES ──────────────────────────────────────────
+function setCat(cat,el){
+  document.querySelectorAll(`#cats-${curType} .cpill`).forEach(p=>p.classList.remove('on'));
+  if(el)el.classList.add('on');
+  curCat=cat;
+  document.getElementById('si').value='';
+  if(cat)loadCategory(cat);else{showHome();}
+}
+
+async function loadCategory(cat){
+  const label=cat.charAt(0).toUpperCase()+cat.slice(1);
+  document.getElementById('hv').style.display='none';
+  document.getElementById('sv').classList.add('on');
+  document.getElementById('slbl').textContent=label;
+  const grid=document.getElementById('sgrid');
+  grid.innerHTML=Array(12).fill(0).map(()=>`<div class="mskel${curType!=='video'?' sq':''}"><div class="mskel-thumb"></div><div class="mskel-body"><div class="mskel-line" style="width:75%"></div><div class="mskel-line" style="width:40%"></div></div></div>`).join('');
+  let results=[];const tasks=[];
+
+  if(curType==='video'){
+    const q=FILM_GENRE_Q[cat]||cat+' film';
+    tasks.push(archSearch('mediatype:movies',q,8).then(r=>results.push(...r)));
+    if(K.yt)tasks.push(ytSearch(`${cat} full movie free official`,6).then(r=>results.push(...r)));
+    if(K.tmdb){const gid=TMDB_GENRES[cat];if(gid)tasks.push(tmdbByGenre(gid).then(r=>results.push(...r)));}
+  } else if(curType==='audio'){
+    const q=AUDIO_GENRE_Q[cat]||cat;
+    tasks.push(librivoxSearch(q,10).then(r=>results.push(...r)));
+    tasks.push(openLibSearch(q,6).then(r=>results.push(...r)));
+  } else if(curType==='music'){
+    const q=MUSIC_GENRE_Q[cat]||cat;
+    tasks.push(musicSearch('etree',q,8).then(r=>results.push(...r)));
+    tasks.push(musicSearch('georgeblood',q,6).then(r=>results.push(...r)));
+    tasks.push(musicSearch('netlabels',q,6).then(r=>results.push(...r)));
+  } else if(curType==='ebook'){
+    const q=EBOOK_GENRE_Q[cat]||cat;
+    tasks.push(gutenbergSearch(q,12).then(r=>results.push(...r)));
+  }
+
+  await Promise.all(tasks);
+  if(!results.length){
+    grid.innerHTML=`<div class="mempty"><div class="mempty-icon">${TYPE_ICON[curType]||'🔍'}</div><h3>No ${label} Found</h3><p>Try another genre.</p></div>`;
+    return;
+  }
+  const seen=new Set();
+  grid.innerHTML=results.filter(x=>seen.has(x.id)?false:seen.add(x.id)).map(x=>card(x)).join('');
+}
+
+// ── SEARCH ──────────────────────────────────────────────
+function setupSearch(){
+  const inp=document.getElementById('si');let tm;
+  inp.addEventListener('input',()=>{clearTimeout(tm);const q=inp.value.trim();if(!q){showHome();return;}tm=setTimeout(()=>doSearch(q),650);});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(tm);const q=inp.value.trim();if(q)doSearch(q);}});
+}
+
+async function doSearch(q){
+  document.getElementById('hv').style.display='none';
+  document.getElementById('sv').classList.add('on');
+  document.getElementById('slbl').textContent=`"${q}"`;
+  curCat='';
+  document.querySelectorAll(`#cats-${curType} .cpill`).forEach(p=>p.classList.remove('on'));
+  const first=document.querySelector(`#cats-${curType} .cpill[data-cat=""]`);if(first)first.classList.add('on');
+  const grid=document.getElementById('sgrid');
+  const sq=curType!=='video';
+  grid.innerHTML=Array(10).fill(0).map(()=>`<div class="mskel${sq?' sq':''}"><div class="mskel-thumb"></div><div class="mskel-body"><div class="mskel-line" style="width:75%"></div><div class="mskel-line" style="width:40%"></div></div></div>`).join('');
+  let results=[];const tasks=[];
+
+  if(curType==='video'){
+    tasks.push(archSearch('mediatype:movies',q,8).then(r=>results.push(...r)));
+    if(K.yt)tasks.push(ytSearch(`${q} full movie OR full episode free`,6).then(r=>results.push(...r)));
+    if(K.tmdb)tasks.push(tmdbSearch(q).then(r=>results.push(...r)));
+  } else if(curType==='audio'){
+    tasks.push(librivoxSearch(q,10).then(r=>results.push(...r)));
+    tasks.push(openLibSearch(q,6).then(r=>results.push(...r)));
+  } else if(curType==='music'){
+    tasks.push(musicSearch('etree',q,8).then(r=>results.push(...r)));
+    tasks.push(musicSearch('georgeblood',q,6).then(r=>results.push(...r)));
+    tasks.push(musicSearch('netlabels',q,6).then(r=>results.push(...r)));
+  } else if(curType==='ebook'){
+    tasks.push(gutenbergSearch(q,14).then(r=>results.push(...r)));
+  }
+
+  await Promise.all(tasks);
+  if(!results.length){
+    grid.innerHTML=`<div class="mempty"><div class="mempty-icon">${TYPE_ICON[curType]||'🔍'}</div><h3>No Results</h3><p>Try a different search.</p></div>`;
+    return;
+  }
+  const seen=new Set();
+  grid.innerHTML=results.filter(x=>seen.has(x.id)?false:seen.add(x.id)).map(x=>card(x)).join('');
+}
+
+function showHome(){
+  document.getElementById('hv').style.display='block';
+  document.getElementById('sv').classList.remove('on');
+  document.getElementById('si').value='';
+  document.querySelectorAll(`#cats-${curType} .cpill`).forEach(p=>p.classList.remove('on'));
+  const first=document.querySelector(`#cats-${curType} .cpill[data-cat=""]`);if(first)first.classList.add('on');
+}
+
+// ── UTILS ────────────────────────────────────────────────
+const enc=s=>encodeURIComponent(s);
+const dh=s=>{const t=document.createElement('textarea');t.innerHTML=s;return t.value;};
+const eh=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ej=s=>String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,'\\"');
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 </script>
 </body>
 </html>
